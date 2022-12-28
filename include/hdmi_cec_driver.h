@@ -31,7 +31,7 @@
  * The Messages APIs allows application to encode high-level message constructs into @b CECFrame raw bytes,
  * or decode @b CECFrame raw bytes into high-level message constructs.
  *
- * @image html hdmicec_api.png
+ * @image html hdmi_cec_architecture.png
  *
  * @par Host Interface
  * The @b Host interface allows libCEC implementation to interact with the host environment
@@ -44,7 +44,7 @@
  * @defgroup HDMI_CEC_APPLICATION HDMI-CEC Applications
  * The relation between Application, Connection and CEC-Bus is described in the figure.
  *
- * @image html hdmicec_applications.png
+ * @image html hdmi_cec_architecture.png
  *
  * @par CEC Daemon
  * This daemon receives Raw Bytes from the SoC Driver and dispatches them into IARM Bus via CecIARMMgr,
@@ -100,7 +100,7 @@
  * and IARM-Bus, the CEC library can converge the CEC traffic from different Connections and Logical Buses before
  * forwarding them to the single physical bus. This is illustrated by the diagram below.
  *
- * @image html hdmicec_multiapp.png
+ * @image html hdmi_cec_architecture.png
  *
  * In this diagram there are two applications (Receiver and CECDevMgr). Since both applications can only access the
  * underlying physical CEC Bus via Connection API, they have no knowledge how the message are eventually delivered
@@ -123,9 +123,9 @@
  */
 
 /**
-* @defgroup hdmicec
+* @defgroup hdmicec hdmicec
 * @{
-* @defgroup ccec
+* @defgroup ccec ccec
 * @{
 **/
 
@@ -217,7 +217,7 @@ int HdmiCecClose(int handle);
  * @param [in] handle The handle returned from the HdmiCecOpen() function.
  * @param [in] logicalAddresses The logicalAddresses set or replace addresses claimed by host.
  *                 A null value clears the current list. 
- * @param [in]] num The number of logical addresses.  If any logical address in the list
+ * @param [in] num The number of logical addresses.  If any logical address in the list
  *                 cannot be set, none of them should be set upon return. Success
  *                 return indicates that all addresses in the list are set.
  *
@@ -287,23 +287,6 @@ int HdmiCecAddLogicalAddress(int handle, int logicalAddresses);
 int HdmiCecRemoveLogicalAddress(int handle, int logicalAddresses);
 
 /**
- * @brief Get the Logical Addresses claimed by host device.  
- *
- * This function gets multiple logical addresses set by the host.  It also means
- * that the driver is actively pick up unicast messages destined to the set of
- * logical addresses returned.
- *
- * @param [in] handle returned from the HdmiCecOpen() function.
- * @param [out] logicalAddresses list of addresses currently set.
- * @param [in/out] size of the logicalAddress list.  Returned number is the total
- *                    number of addresses currently set. This can be larger than the
- *                    input value. An returned value 0 indicate that no address is set. 
- *
- * @return Error Code:  If error code is returned, the get is failed.
- */
-/*int HdmiCecGetLogicalAddress(int handle, int *logicalAddresses, int *num);*/
-
-/**
  * @brief Get the Logical Address obtained by the driver.
  *
  * This function get the logical address for the specified device type.
@@ -326,9 +309,8 @@ int HdmiCecGetLogicalAddress(int handle, int devType,  int *logicalAddress);
  * This function get the Physical address for the specified device type.
  *
  * @param [in] handle returned from the HdmiCecOpen() function.
- * @param [out] physical address acquired
+ * @param [out] physicalAddress physical address acquired
  *
- * @return None.
  * @pre  HdmiCecOpen() should be called before calling this API.
  * @warning  This API is Not thread safe.
  * @see HdmiCecGetLogicalAddress(), HdmiCecSetLogicalAddress()
