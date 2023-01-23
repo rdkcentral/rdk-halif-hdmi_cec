@@ -192,8 +192,7 @@ typedef void (*HdmiCecTxCallback_t)(int handle, void *callbackData, int result);
  * @retval HDMI_CEC_IO_SUCCESS HdmiCecOpen was successful.
  * @retval HDMI_CEC_IO_INVALID_STATE: Calling HdmiCecOpen again after a successful open in a process will result in this error.
  * @retval HDMI_CEC_IO_INVALID_ARGUMENT: This error code will be returned, if parameter passed to this function is invalid.
- * @retval HDMI_CEC_IO_GENERAL_ERROR: This error code indicates the underlying undefined platform error. In the HAL side implementation of this function return value will
- * be initialized with this error code. So that any of the undefined error case scenario in this function, will be report as this error code.
+ * @retval HDMI_CEC_IO_GENERAL_ERROR: This error code indicates the underlying undefined platform error.
  * @warning  This API is Not thread safe.
  * @see HdmiCecClose()
  */
@@ -211,8 +210,7 @@ int HdmiCecOpen(int *handle);
  * @retval HDMI_CEC_IO_SUCCESS HdmiCecClose was successful.
  * @retval HDMI_CEC_IO_INVALID_STATE: Indicates the respective api is called with out calling  HdmiCecOpen () or  preceding HdmiCecOpen () has failed.
  * @retval HDMI_CEC_IO_INVALID_ARGUMENT: This error code will be returned, if parameter passed to this function is invalid.
- * @retval HDMI_CEC_IO_GENERAL_ERROR: This error code indicates the underlying undefined platform error. In the HAL side implementation of this function return value will
- * be initialized with this error code. So that any of the undefined error case scenario in this function, will be report as this error code.
+ * @retval HDMI_CEC_IO_GENERAL_ERROR: This error code indicates the underlying undefined platform error.
  * This usually indicates the underlying unknown platform error.
  * @pre  HdmiCecOpen() should be called before calling this API.
  * @warning  This API is Not thread safe.
@@ -247,8 +245,7 @@ int HdmiCecClose(int handle);
  * @retval HDMI_CEC_IO_SUCCESS HdmiCecSetLogicalAddress was successful.
  * @retval HDMI_CEC_IO_INVALID_STATE: Indicates the respective api is called with out calling  HdmiCecOpen () or  preceding HdmiCecOpen () has failed.
  * @retval HDMI_CEC_IO_INVALID_ARGUMENT: This error code will be returned, if parameter passed to this function is invalid.
- * @retval HDMI_CEC_IO_GENERAL_ERROR: This error code indicates the underlying undefined platform error. In the HAL side implementation of this function return value will
- * be initialized with this error code. So that any of the undefined error case scenario in this function, will be report as this error code.
+ * @retval HDMI_CEC_IO_GENERAL_ERROR: This error code indicates the underlying undefined platform error.
  * This usually indicates the underlying unknown platform error.
  * @pre  HdmiCecOpen() should be called before calling this API.
  * @pre  HdmiCecOpen() should be called before calling this API.
@@ -292,8 +289,7 @@ int HdmiCecSetLogicalAddress(int handle, int *logicalAddresses, int num);
  * @retval HDMI_CEC_IO_SUCCESS HdmiCecAddLogicalAddress was successful.
  * @retval HDMI_CEC_IO_INVALID_STATE: Indicates the respective api is called with out calling  HdmiCecOpen () or  preceding HdmiCecOpen () has failed.
  * @retval HDMI_CEC_IO_INVALID_ARGUMENT: This error code will be returned, if parameter passed to this function is invalid.
- * @retval HDMI_CEC_IO_GENERAL_ERROR: This error code indicates the underlying undefined platform error. In the HAL side implementation of this function return value will
- * be initialized with this error code. So that any of the undefined error case scenario in this function, will be report as this error code.
+ * @retval HDMI_CEC_IO_GENERAL_ERROR: This error code indicates the underlying undefined platform error.
  * This usually indicates the underlying unknown platform error.
  * @pre  HdmiCecOpen() should be called before calling this API.
  * @warning  This API is Not thread safe.
@@ -318,8 +314,7 @@ int HdmiCecAddLogicalAddress(int handle, int logicalAddresses);
  * @retval HDMI_CEC_IO_SUCCESS HdmiCecRemoveLogicalAddress was successful.
  * @retval HDMI_CEC_IO_INVALID_STATE: Indicates the respective api is called with out calling  HdmiCecOpen () or  preceding HdmiCecOpen () has failed.
  * @retval HDMI_CEC_IO_INVALID_ARGUMENT: This error code will be returned, if parameter passed to this function is invalid.
- * @retval HDMI_CEC_IO_GENERAL_ERROR: This error code indicates the underlying undefined platform error. In the HAL side implementation of this function return value will
- * be initialized with this error code. So that any of the undefined error case scenario in this function, will be report as this error code.
+ * @retval HDMI_CEC_IO_GENERAL_ERROR: This error code indicates the underlying undefined platform error.
  * This usually indicates the underlying unknown platform error.
  * @pre  HdmiCecOpen() should be called before calling this API.
  * @warning  This API is Not thread safe.
@@ -343,8 +338,7 @@ int HdmiCecRemoveLogicalAddress(int handle, int logicalAddresses);
  * @retval HDMI_CEC_IO_SUCCESS HdmiCecGetLogicalAddress was successful.
  * @retval HDMI_CEC_IO_INVALID_STATE: Indicates the respective api is called with out calling  HdmiCecOpen () or  preceding HdmiCecOpen () has failed.
  * @retval HDMI_CEC_IO_INVALID_ARGUMENT: This error code will be returned, if parameter passed to this function is invalid.
- * @retval HDMI_CEC_IO_GENERAL_ERROR: This error code indicates the underlying undefined platform error. In the HAL side implementation of this function return value will
- * be initialized with this error code. So that any of the undefined error case scenario in this function, will be report as this error code.
+ * @retval HDMI_CEC_IO_GENERAL_ERROR: This error code indicates the underlying undefined platform error.
  * @pre  HdmiCecOpen() should be called before calling this API.
  * @warning  This API is Not thread safe.
  * @see HdmiCecAddLogicalAddress(), HdmiCecRemoveLogicalAddress(), HdmiCecSetLogicalAddress()
@@ -408,8 +402,7 @@ void HdmiCecGetPhysicalAddress(int handle, unsigned int *physicalAddress);
  * @retval HDMI_CEC_IO_SUCCESS HdmiCecGetLogicalAddress was successful.
  * @retval HDMI_CEC_IO_INVALID_STATE: Indicates the respective api is called with out calling  HdmiCecOpen () or  preceding HdmiCecOpen () has failed.
  * @retval HDMI_CEC_IO_INVALID_ARGUMENT: This error code will be returned, if parameter passed to this function is invalid.
- * @retval HDMI_CEC_IO_GENERAL_ERROR: This error code indicates the underlying undefined platform error. In the HAL side implementation of this function return value will
- * be initialized with this error code. So that any of the undefined error case scenario in this function, will be report as this error code.
+ * @retval HDMI_CEC_IO_GENERAL_ERROR: This error code indicates the underlying undefined platform error.
  * @pre  HdmiCecOpen() should be called before calling this API.
  * @warning  This API is Not thread safe.
  * @see HdmiCecTx(), HdmiCecTxAsync(), HdmiCecSetTxCallback()
@@ -435,8 +428,7 @@ int HdmiCecSetRxCallback(int handle, HdmiCecRxCallback_t cbfunc, void *data);
  * @retval HDMI_CEC_IO_SUCCESS HdmiCecGetLogicalAddress was successful.
  * @retval HDMI_CEC_IO_INVALID_STATE: Indicates the respective api is called with out calling  HdmiCecOpen () or  preceding HdmiCecOpen () has failed.
  * @retval HDMI_CEC_IO_INVALID_ARGUMENT: This error code will be returned, if parameter passed to this function is invalid.
- * @retval HDMI_CEC_IO_GENERAL_ERROR: This error code indicates the underlying undefined platform error. In the HAL side implementation of this function return value will
- * be initialized with this error code. So that any of the undefined error case scenario in this function, will be report as this error code.
+ * @retval HDMI_CEC_IO_GENERAL_ERROR: This error code indicates the underlying undefined platform error.
  * @pre  HdmiCecOpen() should be called before calling this API.
  * @warning  This API is Not thread safe.
  * @see HdmiCecTx(), HdmiCecTxAsync()
@@ -470,8 +462,7 @@ int HdmiCecSetTxCallback(int handle, HdmiCecTxCallback_t cbfunc, void *data);
  * @retval HDMI_CEC_IO_SENT_BUT_NOT_ACKD : Hdmicec message send but not acknowledged by the receiver.
  * @retval HDMI_CEC_IO_SENT_FAILED: Hdmicec io send message failed.
  * @retval HDMI_CEC_IO_LOGICALADDRESS_UNAVAILABLE Hdmi Cec receiver logical address is not available.
- * @retval HDMI_CEC_IO_GENERAL_ERROR: This error code indicates the underlying undefined platform error. In the HAL side implementation of this function return value will
- * be initialized with this error code. So that any of the undefined error case scenario in this function, will be report as this error code.
+ * @retval HDMI_CEC_IO_GENERAL_ERROR: This error code indicates the underlying undefined platform error.
  * @pre  HdmiCecOpen() should be called before calling this API.
  * @warning  This API is Not thread safe.
  * @see HdmiCecTxAsync(), HdmiCecSetRxCallback()
@@ -499,8 +490,7 @@ int HdmiCecTx(int handle, const unsigned char *buf, int len, int *result);
  * @retval HDMI_CEC_IO_SENT_BUT_NOT_ACKD : Hdmicec message send but not acknowledged by the receiver.
  * @retval HDMI_CEC_IO_SENT_FAILED: Hdmicec io send message failed.
  * @retval HDMI_CEC_IO_LOGICALADDRESS_UNAVAILABLE Hdmi Cec receiver logical address is not available.
- * @retval HDMI_CEC_IO_GENERAL_ERROR: This error code indicates the underlying undefined platform error. In the HAL side implementation of this function return value will
- * be initialized with this error code. So that any of the undefined error case scenario in this function, will be report as this error code.
+ * @retval HDMI_CEC_IO_GENERAL_ERROR: This error code indicates the underlying undefined platform error.
  * @warning  This API is Not thread safe.
  * @see HdmiCecTx(), HdmiCecSetRxCallback()
  */
