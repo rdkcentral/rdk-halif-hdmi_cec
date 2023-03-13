@@ -3,27 +3,85 @@
 # HDMI CEC HAL Documentation
 
 
-
-
 # Version and Version History
+
+## Version History
+
+| Date | Author | Comment | Version |
+| --- | --------- | --- | --- |
+| 13/03/23 | Review Team | Edit  | 1.0.1 |
+| 06/12/22| Amit Patel | First Release | 1.0.0 |
 
 
 1.0.0 Initial Revision covers existing HDMI CEC HAL implementation.
 
 
 # Description
-The diagram below describes a high-level software architecture of the HDMI CEC module stack. HDMICecDaemon is the main process responsible to initialized CEC HAL component. For any platform/product one of the CEC thunder plugin is running which is responsible to initialize CEC driver and perform respective CEC operations using CEC client side library.
+The diagram below describes a high-level software architecture of the HDMI CEC module stack. 
 
 ![HDMI CEC Architecture Diag](hdmi_cec_architecture.png)
 
-HdmiCec HAL provides a set of API's to initialize HDMI CEC driver and communicate CEC messages with other CEC devices connected with HDMI cable. Mainly the HAL API corresponds to CEC open and close driver, retrieve discovered Logical and Physical address of host device, synchronous and asynchronous API's to transmit and receive messages to and from the remote device.
+HdmiCec HAL provides a set of APIs to initialize HDMI CEC driver and communicate CEC messages with other CEC devices connected with HDMI cable. Mainly the HAL API corresponds to CEC open and close driver, retrieve discovered Logical and Physical address of host device, synchronous and asynchronous APIs to transmit and receive messages to and from the remote device.
  
 # Component Runtime Execution Requirements
 
- The 3rd party delivery is responsible to perform CEC logical and Physical address discovery.
- CEC message transmit operation should complete within few hundred ms.
- RDK middleware is responsible to perform retry operation as per the CEC specification requirements. 
- Failure to meet these requirements will likely result in undefined and unexpected behavior.
+CEC HAL client module is responsible to perform CEC logical and Physical address discovery. CEC message transmit operation should complete within a reasonable time (a few hundred ms). Client is responsible to perform retry operation as per the CEC specification requirements. 
+ 
+ #TODO Sreenivasa to check on the specs
+ 
+
+#TODO : Add Initialization and Startup section
+
+## Threading Model
+
+HDMI CEC HAL is not thread safe, any module which is invoking the HDMI CEC HAL APIa should ensure calls are made in a thread safe manner.
+
+All threads should be correctly terminated when HdmiCecClose() is called.
+
+HDMI CEC HAL implementation is allowed to create internal threads to meet the requirements of underlaying CEC driver module and meet the operational requirements. In this case HDMI CEC HAL implementations should be responsible to synchronize between the calls, events and cleanup the thread.
+
+## Process Model
+
+At any point of time a single instance of the CEC HAL client moduleprocess can exist to respond to any CEC related functionality.
+
+## Memory Model
+
+For transmit messages, it is upto the HDMI CEC HAL client module to allocate and free the memory for the message buffer. For callbacks/received messages, the HDMI CEC HAL is responsible for the memory allocation and de-allocation.
+
+## Power Management Requirements
+
+The HDMI CEC HAL is not involved in any of the power management operations. Any power management state transitions MUST not affect the operation of the HDMI CEC HAL. e.g. on resumption from a low power state, the operation of the HDMI CEC should continue as if no transition has occurred.
+
+## Asynchronous Notification Model
+
+For asynchronous HDMI CEC transmit and receive operations, the following APIs and callback registrations are used:
+
+  1. For async transmit use the function: HdmiCecTxAsync(int, const unsigned char *, int)
+  2. For async receive call back use the function: HdmiCecSetRxCallback(int, HdmiCecRxCallback_t, void*)
+  3. For async transmit ack use the function: HdmiCecSetTxCallback(int, HdmiCecTxCallback_t, void*)
+
+Please refer [Memory Model](#memory_model) for memory allocation for asynchronous calls.
+
+## Blocking calls
+
+Please see the blocking calls used in HDMI CEC HAL:
+  1. HdmiCecOpen(int *)
+  2. HdmiCecClose(int)
+  3. HdmiCecSetLogicalAddress(int, int *, int)
+  4. HdmiCecAddLogicalAddress(int, int)
+  5. HdmiCecRemoveLogicalAddress(int, int)
+  6. HdmiCecGetLogicalAddress(int, int,  int *)
+  7. HdmiCecGetPhysicalAddress(int,unsigned int *)
+  8. HdmiCecTx(int, const unsigned char *, int, int *)
+Blocking calls should complete within a time period commensurate with the complexity of the operation and in accordance with any relevant CEC specification. Any calls that can fail due to the lack of a response from connected device should have a timeout period in accordance with any relevant documentation. If any of the blocking call is prematurely terminated after successful HdmiCecOpen(int *) call, client is responsible to call HdmiCecClose(int) and retry the steps in Theory of operation.
+
+## Internal Error Handling
+
+All the CEC HAL API's should return error synchronously as a return argument. HAL is responsible to handle system errors(e.g. out of memory) internally.
+
+## Persistence Model
+
+There is no requirement for HAL to persist any setting information. Application/Client is responsible to persist any settings related to HDMI CEC feature.
 
 ## Theory of operation
 
@@ -51,63 +109,6 @@ HDMI CEC HAL API is initialized by HdmiCecDaemon module. RDK-V middleware expect
 
 Need to call the function sequence in above order so that the system behaves
 in a deterministic manner, every time.
-
-## Threading Model
-
-HDMI CEC HAL is not thread safe, any module which is invoking the HDMI CEC HAL api 
-should ensure calls are made in a thread safe manner.
-
-All thread should be correctly terminated when  HdmiCecClose() is called.
-
-Different 3rd party vendors allowed to create internal threads to meet the requirements of underlaying CEC driver module and meet the operational requirements. In this case 3rd party implementations should be responsible to synchronize between the calls, events and cleanup the thread.
-
-## Process Model
-
-HdmiCecDaemon process takes care of Initializing CEC HAL component. At any point of time a single instance of HdmiCecDaemon process exists to respond to any CEC related functionality to the application.
-The interface implementation should not manipulate any process-wide state, such as the current directory, locale, etc. Doing so could have unintended consequences for other threads within the process group.
-
-## Memory Model
-
-CEC HAL client module is responsible to pass message buffer and free it for transmit request. For Receive message passes message buffer in the callback and client is responsible to copy to its internal buffer before callback is returned.
-
-## Power Management Requirements
-
-The CEC HAL is not involved in any of the power management operation.
-Any power management state transitions MUST not affect the operation of the CEC HAL. e.g. on resumption from a low power state the operation of the CEC should continue as if no transition has occurred.
-
-For further information on handling wake from DEEPSLEEP see the RDK PowerManager HAL documentation.
-
-## Asynchronous Notification Model
-
-Asynchronous CEC transmit and receive operations following API's  and callback registrations are used.
-  1. For async transmit use the function: HdmiCecTxAsync(int, const unsigned char *, int)
-
-  2. For async receive call back use the function: HdmiCecSetRxCallback(int, HdmiCecRxCallback_t, void*)
-
-  3. For async transmit ack use the function: HdmiCecSetTxCallback(int, HdmiCecTxCallback_t, void*)
-
-
-
-## Blocking calls
-
-Please see the blocking calls used in HDMI CEC HAL:
-  1. HdmiCecOpen(int *)
-  2. HdmiCecClose(int)
-  3. HdmiCecSetLogicalAddress(int, int *, int)
-  4. HdmiCecAddLogicalAddress(int, int)
-  5. HdmiCecRemoveLogicalAddress(int, int)
-  6. HdmiCecGetLogicalAddress(int, int,  int *)
-  7. HdmiCecGetPhysicalAddress(int,unsigned int *)
-  8. HdmiCecTx(int, const unsigned char *, int, int *)
-Blocking calls should complete within a time period commensurate with the complexity of the operation and in accordance with any relevant CEC specification. Any calls that can fail due to the lack of a response from connected device should have a timeout period in accordance with any relevant documentation. If any of the blocking call is prematurely terminated after successful HdmiCecOpen(int *) call, client is responsible to call HdmiCecClose(int) and retry the steps in Theory of operation.
-
-## Internal Error Handling
-
-All the CEC HAL API's should return error synchronously as a return argument. HAL is responsible to handle system errors(e.g. out of memory) internally.
-
-## Persistence Model
-
-There is no requirement for HAL to persist any setting information. Application/Client is responsible to persist any settings related to HDMI CEC feature.
 
 
 # Nonfunctional requirements
