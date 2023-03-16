@@ -19,7 +19,7 @@
 # Description
 The diagram below describes a high-level software architecture of the HDMI CEC module stack. 
 
-![HDMI CEC Architecture Diag](hdmi_cec_architecture.png)
+![HDMI CEC Architecture Diag](images/hdmi_cec_architecture.png)
 
 HdmiCec HAL provides a set of APIs to initialize HDMI CEC driver and communicate CEC messages with other CEC devices connected with HDMI cable. Mainly the HAL API corresponds to CEC open and close driver, retrieve discovered Logical and Physical address of host device, synchronous and asynchronous APIs to transmit and receive messages to and from the remote device.
  
@@ -30,7 +30,10 @@ CEC HAL client module is responsible to perform CEC logical and Physical address
  #TODO Sreenivasa to check on the specs
  
 
-#TODO : Add Initialization and Startup section
+## Initialization and Startup
+
+Hdmi CEC HAL Client process will initialize CEC HAL by calling HdmiCecOpen() API before calling any other HAL API.
+
 
 ## Threading Model
 
@@ -161,8 +164,8 @@ Covered as per "Description" sections.
 
 #### Sequence Diagram
 
-![HDMI CEC Sequence Diagram](hdmi_cec_sequence.png)
+![HDMI CEC Sequence Diagram](images/hdmi_cec_sequence.png)
 
 #### State Diagram
 
-![HDMI CEC State Diagram](hdmi_cec_state.png)
+![HDMI CEC State Diagram](images/hdmi_cec_state.png)
