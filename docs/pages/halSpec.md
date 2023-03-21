@@ -134,8 +134,7 @@ None
 
 HDMI CEC HAL should be initialized by HDMI CEC client process. HDMI CEC client is expected to have complete control over the life cycle of the Hdmi CEC HAL module.
 
-  1. Initialize the driver using function: HdmiCecOpen(int * ) before making any other CEC HAL API calls. This call performs the CEC driver open functionality, discovers the CEC logical address based on the device type and discovers the physical address based on the connection topology. If HdmiCecOpen( int * ) calls fails, CEC HAL should return the respective error code, so that the client can retry the operation. 
-  #TODO : Amit to check the internal functioning of HdmiCecOpen(int * )
+  1. Initialize the driver using function: HdmiCecOpen(int * ) before making any other CEC HAL API calls. This call performs the CEC driver open functionality, discovers the physical address based on the connection topology. In case of source devices HdmiCecOpen should initiate the logical address discovery part of this routine. In case of sink devices logical address will be fixed and set using the HdmiCecAddLogicalAddress api by the client module. If HdmiCecOpen( int * ) calls fails, CEC HAL should return the respective error code, so that the client can retry the operation.
 
   2. Once logical address and physical address is assigned, CEC module should able to send and receive the respective CEC commands
 
