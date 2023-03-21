@@ -9,7 +9,6 @@
 
 | Date | Author | Comment | Version |
 | --- | --------- | --- | --- |
-| 21/03/23 | Anooj Cherian K | mermaid diagrams  | 1.0.2 |
 | 13/03/23 | Review Team | Edit  | 1.0.1 |
 | 06/12/22| Amit Patel | First Release | 1.0.0 |
 
@@ -19,8 +18,8 @@ The diagram below describes a high-level software architecture of the HDMI CEC m
 ```mermaid
 %%{ init : { "theme" : "forest", "flowchart" : { "curve" : "linear" }}}%%
 flowchart TD
-y[HDMI CEC HAL Client process]-->x[HDMI CEC HAL lib];
-x[HDMI CEC HAL lib]-->z[HDMI CEC SOC Driver];
+y[HDMI CEC HAL Client process]<-->x[HDMI CEC HAL lib];
+x[HDMI CEC HAL lib]<-->z[HDMI CEC SOC Driver];
 style y fill:#99CCFF,stroke:#333,stroke-width:0.3px,align:left
 style z fill:#fcc,stroke:#333,stroke-width:0.3px,align:left
 style x fill:#9f9,stroke:#333,stroke-width:0.3px,align:left
@@ -76,12 +75,11 @@ Please refer [Memory Model](#memory_model) for memory allocation for asynchronou
 Please see the blocking calls used in HDMI CEC HAL:
   1. HdmiCecOpen( int * )
   2. HdmiCecClose( int )
-  3. HdmiCecSetLogicalAddress( int, int * , int )
-  4. HdmiCecAddLogicalAddress( int, int )
-  5. HdmiCecRemoveLogicalAddress( int, int )
-  6. HdmiCecGetLogicalAddress( int, int, int * )
-  7. HdmiCecGetPhysicalAddress( int, unsigned int * )
-  8. HdmiCecTx( int, const unsigned char * , int, int * )
+  3. HdmiCecAddLogicalAddress( int, int )
+  4. HdmiCecRemoveLogicalAddress( int, int )
+  5. HdmiCecGetLogicalAddress( int, int, int * )
+  6. HdmiCecGetPhysicalAddress( int, unsigned int * )
+  7. HdmiCecTx( int, const unsigned char * , int, int * )
     
 Blocking calls should complete within a reasonable time period in accordance with any relevant CEC specification. Any calls that can fail due to the lack of a response from connected device should have a timeout period in accordance with any relevant CEC specification. If any of the blocking call is prematurely terminated after successful HdmiCecOpen(int * ) call, client is responsible to call HdmiCecClose(int) and retry the steps in Theory of operation.
 

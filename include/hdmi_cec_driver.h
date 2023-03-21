@@ -220,42 +220,6 @@ int HdmiCecOpen(int *handle);
 int HdmiCecClose(int handle);
 
 /**
- *
- * Set the Logical Addresses claimed by host device.
- * This function sets multiple logical addresses used by the host.  The host
- * has claimed these logical address through the Discovery process.  Once 
- * set, the host shall receive all CEC packets destined to these addresses.
- *
- * Once the driver is opened, the host shall receive all broadcast messages 
- * regardless the Logical addresses.
- * 
- * when there is no logical address set, the host shall only receive broadcast
- * messages.
- *
- * @param [in] handle - The handle returned from the HdmiCecOpen() function.
- * @param [in] logicalAddresses - The logicalAddresses set or replace addresses claimed by host.
- *                 A null value clears the current list. 
- * @param [in] num - The number of logical addresses.  If any logical address in the list
- *                 cannot be set, none of them should be set upon return. Success
- *                 return indicates that all addresses in the list are set.
- *
- * @return Error Code:  If error code is returned, the set is failed.
- * TODO: Change the return type to HDMI_CEC_IO_ERROR instead of int
- * Possible error codes are:
- * @retval HDMI_CEC_IO_SUCCESS HdmiCecSetLogicalAddress was successful.
- * @retval HDMI_CEC_IO_INVALID_STATE: Indicates the respective api is called with out calling  HdmiCecOpen () or  preceding HdmiCecOpen () has failed.
- * @retval HDMI_CEC_IO_INVALID_ARGUMENT: This error code will be returned, if parameter passed to this function is invalid.
- * @retval HDMI_CEC_IO_GENERAL_ERROR: This error code indicates the underlying undefined platform error.
- * This usually indicates the underlying unknown platform error.
- * @pre  HdmiCecOpen() should be called before calling this API.
- * @pre  HdmiCecOpen() should be called before calling this API.
- * @warning  This API is Not thread safe.
- * @note This API is not used as SOC is responsible to perform logical address discovery.
- * @see HdmiCecAddLogicalAddress(), HdmiCecRemoveLogicalAddress(), HdmiCecGetLogicalAddress()
- */
-int HdmiCecSetLogicalAddress(int handle, int *logicalAddresses, int num);
-
-/**
  * @brief Add one Logical Addresses to be used by host device.
  *
  * This function can block until the intended logical address is secured by
@@ -294,7 +258,7 @@ int HdmiCecSetLogicalAddress(int handle, int *logicalAddresses, int num);
  * @pre  HdmiCecOpen() should be called before calling this API.
  * @warning  This API is Not thread safe.
  * @note This API is not used as SOC is responsible to perform logical address discovery.
- * @see HdmiCecSetLogicalAddress(), HdmiCecRemoveLogicalAddress(), HdmiCecGetLogicalAddress()
+ * @see HdmiCecRemoveLogicalAddress(), HdmiCecGetLogicalAddress()
  */
 int HdmiCecAddLogicalAddress(int handle, int logicalAddresses);
 
@@ -319,7 +283,7 @@ int HdmiCecAddLogicalAddress(int handle, int logicalAddresses);
  * @pre  HdmiCecOpen() should be called before calling this API.
  * @warning  This API is Not thread safe.
  * @note This API is not used as SOC is responsible to perform logical address discovery.
- * @see HdmiCecAddLogicalAddress(), HdmiCecSetLogicalAddress(), HdmiCecGetLogicalAddress()
+ * @see HdmiCecAddLogicalAddress(), HdmiCecGetLogicalAddress()
  */
 int HdmiCecRemoveLogicalAddress(int handle, int logicalAddresses);
 
@@ -341,7 +305,7 @@ int HdmiCecRemoveLogicalAddress(int handle, int logicalAddresses);
  * @retval HDMI_CEC_IO_GENERAL_ERROR: This error code indicates the underlying undefined platform error.
  * @pre  HdmiCecOpen() should be called before calling this API.
  * @warning  This API is Not thread safe.
- * @see HdmiCecAddLogicalAddress(), HdmiCecRemoveLogicalAddress(), HdmiCecSetLogicalAddress()
+ * @see HdmiCecAddLogicalAddress(), HdmiCecRemoveLogicalAddress()
  */
 int HdmiCecGetLogicalAddress(int handle, int devType,  int *logicalAddress);
 
@@ -355,7 +319,7 @@ int HdmiCecGetLogicalAddress(int handle, int devType,  int *logicalAddress);
  *
  * @pre  HdmiCecOpen() should be called before calling this API.
  * @warning  This API is Not thread safe.
- * @see HdmiCecGetLogicalAddress(), HdmiCecSetLogicalAddress()
+ * @see HdmiCecGetLogicalAddress()
  */
 void HdmiCecGetPhysicalAddress(int handle, unsigned int *physicalAddress);
 
