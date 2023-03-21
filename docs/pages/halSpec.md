@@ -9,14 +9,23 @@
 
 | Date | Author | Comment | Version |
 | --- | --------- | --- | --- |
+| 21/03/23 | Anooj Cherian K | mermaid diagrams  | 1.0.2 |
 | 13/03/23 | Review Team | Edit  | 1.0.1 |
 | 06/12/22| Amit Patel | First Release | 1.0.0 |
 
 
 # Description
 The diagram below describes a high-level software architecture of the HDMI CEC module stack. 
+```mermaid
+%%{ init : { "theme" : "forest", "flowchart" : { "curve" : "linear" }}}%%
+flowchart TD
+y[HDMI CEC HAL Client process]-->x[HDMI CEC HAL lib];
+x[HDMI CEC HAL lib]-->z[HDMI CEC SOC Driver];
+style y fill:#99CCFF,stroke:#333,stroke-width:0.3px,align:left
+style z fill:#fcc,stroke:#333,stroke-width:0.3px,align:left
+style x fill:#9f9,stroke:#333,stroke-width:0.3px,align:left
 
-![HDMI CEC Architecture Diag](images/hdmi_cec_architecture.png)
+ ```
 
 HdmiCec HAL provides a set of APIs to initialize HDMI CEC driver and communicate CEC messages with other CEC devices connected with HDMI cable. Mainly the HAL API corresponds to CEC open and close driver, retrieve discovered Logical and Physical address of host device, synchronous and asynchronous APIs to transmit and receive messages to and from the remote device.
  
@@ -157,10 +166,38 @@ Covered as per "Description" sections.
 
 #### Sequence Diagram
 
-#TODO Change all images to mermaid code
-
-![HDMI CEC Sequence Diagram](images/hdmi_cec_sequence.png)
+```mermaid
+%%{ init : { "theme" : "default", "flowchart" : { "curve" : "stepBefore" }}}%%
+   sequenceDiagram
+    HdmiCecDemon->>HdmiCecHal:HdmiCecOpen
+    HdmiCecHal-->>HdmiCecDemon:return
+    Note over HdmiCecHal: Once open is completed soc will discover <br> physical and logical address internally, <br> based on device type and connection topology
+    HdmiCecDemon->>HdmiCecHal:HdmiCecSetRxCallback
+    HdmiCecHal-->>HdmiCecDemon:return
+    HdmiCecDemon ->>HdmiCecHal:HdmiCecGetLogicalAddress
+    HdmiCecHal-->>HdmiCecDemon:return
+    HdmiCecDemon ->>HdmiCecHal:HdmiCecGetPhysicalAddress
+    HdmiCecHal-->>HdmiCecDemon:return
+    Note over HdmiCecDemon,HdmiCecHal: sync cec transmit message
+    HdmiCecDemon ->>HdmiCecHal:HdmiCecTx
+    HdmiCecHal-->>HdmiCecDemon:return
+    Note over HdmiCecHal: for the above message if response expected or message originated <br> from the remote device HdmiCecSetRxCallback fn will trigger
+    HdmiCecHal-->>HdmiCecDemon:HdmiCecSetCallback triggered
+    Note over HdmiCecDemon,HdmiCecHal: Close the cec driver. Cec hal operation finished
+    HdmiCecDemon ->>HdmiCecHal:HdmiCecClose
+    HdmiCecHal-->>HdmiCecDemon:return
+ ```
 
 #### State Diagram
 
-![HDMI CEC State Diagram](images/hdmi_cec_state.png)
+```mermaid
+%%{ init : { "theme" : "default", "flowchart" : { "curve" : "stepBefore" }}}%%
+    stateDiagram-v2
+        [*] --> Closed
+        Closed --> OpenState:HdmiCecOpen <br> will do cec driver open
+        OpenState --> ReadyState:Logical and physical address <br> allocated
+        note right of ReadyState : Ready state we can send and <br> receive messages.
+        OpenState --> Closed : HdmiCecClose
+        ReadyState --> Closed : HdmiCecClose
+
+```
