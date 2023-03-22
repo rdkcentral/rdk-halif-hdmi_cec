@@ -13,10 +13,8 @@
 | 06/12/22| Amit Patel | First Release | 1.0.0 |
 
 ### Acronymns
-HDMI - 
-CEC  - 
-
-#TODO to be filled up
+1. HDMI - High-Definition Multimedia Interface
+2. CEC  - Consumer Electronics Control
 
 ## Description
 The diagram below describes a high-level software architecture of the HDMI CEC module stack. 
