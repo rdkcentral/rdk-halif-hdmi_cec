@@ -33,7 +33,7 @@ style x fill:#9f9,stroke:#333,stroke-width:0.3px,align:left
  
 ## Component Runtime Execution Requirements
 
- CEC message transmit operation should complete within one second. Desired CEC response time is 250 milliseconds. Caller is responsible to perform retry operation as per the CEC specification requirements. 
+ CEC message transmit operation should complete within one second. Desired CEC response time is 250 milliseconds and maximum response time should be 1 second as provided in the CEC specifications. Caller is responsible to perform retry operation as per the CEC specification requirements. 
 
  
 ### Initialization and Startup
@@ -50,7 +50,7 @@ The interface is expected to support a single instantiation with a single proces
 
 ### Memory Model
 
-For transmit messages, it is upto the caller to allocate and free the memory for the message buffer. For receive messages, the HAL is responsible for memory management. The memory allocated cannot exceed 256 bits.
+For transmit messages, it is upto the caller to allocate and free the memory for the message buffer. For receive messages, the HAL is responsible for memory management. The memory allocated cannot exceed 20 bytes.
 
 ### Power Management Requirements
 
@@ -68,30 +68,29 @@ The caller will return the callback context as fast as possible.
 
 ### Blocking calls
 
-There are no blocking calls. Synchronous calls should complete within a reasonable time period in accordance with any relevant CEC specification. Any calls that can fail due to the lack of a response from connected device should have a timeout period in accordance with any relevant CEC specification. If any of the blocking call is prematurely terminated after successful HdmiCecOpen(int * ) call, client is responsible to call HdmiCecClose(int) and retry the steps in Theory of operation.
+There are no blocking calls. Synchronous calls should complete within a reasonable time period in accordance with any relevant CEC specification. Any calls that can fail due to the lack of a response from connected device should have a timeout period in accordance with any relevant CEC specification. If any of the blocking call is prematurely terminated after successful `HdmiCecOpen()` call, client is responsible to call `HdmiCecClose()` and retry the steps in Theory of operation.
 
 ### Internal Error Handling
 
-All the HDMI CEC HAL APIs should return error synchronously as a return argument. HAL is responsible to handle system errors(e.g. out of memory) internally.
+All the APIs should return error synchronously as a return argument. HAL is responsible to handle system errors(e.g. out of memory) internally.
 
 ### Persistence Model
 
-There is no requirement for HAL to persist any setting information. HDMI CEC Client is responsible to persist any settings related to HDMI CEC feature.
-
+There is no requirement for HAL to persist any setting information. Caller is responsible to persist any settings related to `HDMI CEC` feature.
 
 ## Nonfunctional requirements
 
 ### Logging and debugging requirements
 
-HDMI CEC HAL component should log all the error and critical informative messages which helps to debug/triage the issues and understand the functional flow of the system.
+`HDMI CEC` HAL component must support DEBUG,INFO and ERROR messages. DEBUG should be disabled by default and enabled when required.
 
 ### Memory and performance requirements
 
-HDMI CEC HAL should not cause excessive memory and CPU utilization.
+The HAL should not cause excessive memory and CPU utilization.
 
 ### Quality Control
 
-HDMI CEC HAL implementation should perform static analysis, our preferred tool is Coverity.
+`HDMI CEC` HAL implementation should perform static analysis, our preferred tool is Coverity.
 Copyright validation should be performed, our preferred tool is Black duck.
 - Have a zero-warning policy with regards to compiling. All warnings should be treated as error.
 - Use of memory analysis tools like Valgrind are encouraged, to identify leaks/corruptions.
@@ -103,12 +102,11 @@ HDMI CEC HAL implementation is expected to released under the Apache License 2.0
 
 ## Build Requirements
 
-HDMI CEC HAL source code should be built independently.
-  
-
+`HDMI CEC` HAL source code must build into shared library code. Must be named as libmd-hal.so.
+ 
 ### Variability Management
 
-Any changes in the APIs should be reviewed and approved by COMCAST.
+Any changes in the APIs should be reviewed and approved by the component architects.
 
 ## Platform or Product Customization
 
@@ -119,32 +117,26 @@ None
 
 ## Theory of operation and key concepts
 
-HDMI CEC HAL should be initialized by HDMI CEC client process. HDMI CEC client is expected to have complete control over the life cycle of the Hdmi CEC HAL module.
+`HDMI CEC` HAL should be initialized by the caller. The caller is expected to have complete control over the life cycle of the `HDMI CEC` HAL component.
 
-  1. Initialize the driver using function: HdmiCecOpen(int * ) before making any other CEC HAL API calls. This call performs the CEC driver open functionality, discovers the physical address based on the connection topology. In case of source devices HdmiCecOpen should initiate the logical address discovery part of this routine. In case of sink devices logical address will be fixed and set using the HdmiCecAddLogicalAddress api by the client module. If HdmiCecOpen( int * ) calls fails, CEC HAL should return the respective error code, so that the client can retry the operation.
+  1. Initialize the HAL using function: `HdmiCecOpen()` before making any other API calls. This call also discovers the physical address based on the connection topology. In case of source devices, `HdmiCecOpen()` should initiate the logical address discovery as part of this routine. In case of sink devices, logical address will be fixed and set using the `HdmiCecAddLogicalAddress() API. If `HdmiCecOpen()` call fails, the HAL should return the respective error code, so that the caller can retry the operation.
 
-  2. Once logical address and physical address is assigned, CEC module should able to send and receive the respective CEC commands
+  2. Once logical address and physical address is assigned, the caller should able to send and receive the respective CEC messages.
 
-        2.1. For asynchronous receive operations use the call back function: HdmiCecSetRxCallback(int, HdmiCecRxCallback_t, void*)
-             Please ensure receive call back is registered before doing transmit, if we are expecting any reply from the 
-             destination device
+        2.1. For asynchronous receive operations, use the callback function: `HdmiCecSetRxCallback()`.
+             Caller must register a callback after initialisation.
 
-        2.2. For synchronous transmit use the function: HdmiCecTx(int, const unsigned char *, int, int*)
+        2.2. For synchronous transmit, use the function: `HdmiCecTx()`.
 
-        2.3. For asynchronous transmit ack use the call back function: HdmiCecSetTxCallback(int, HdmiCecTxCallback_t, void*)
-             Please ensure this call back is registered before doing asynchronous transmit operation. This call back
-             is used to get the ack for the HdmiCecTxAsync
+        2.3. For asynchronous transmit, use the function: `HdmiCecTxAsync()`.
+	     Caller must register a callback (`HdmiCecSetTxCallback()`) after initialisation.
 
-		2.4. For async transmit use the function: HdmiCecTxAsync(int, const unsigned char *, int)
+  3. Once `HDMI CEC` operations are finished, as part of cleanup process, remove the assigned logical address using the function: `HdmiCecRemoveLogicalAddress()`
 
-  4. Once HDMI CEC operations are finished part of cleanup process, remove the assigned logical address using the function: HdmiCecRemoveLogicalAddress(int, int)
+  4. Finally, de-intialise the HAL using the API: `HdmiCecClose()`
 
-  5. Finally close the CEC driver using the HAL api: HdmiCecClose(int)
+NOTE: Caller should call the function sequence in the above order, so that the system behaves in a deterministic manner, every time.
 
-Need to call the function sequence in above order so that the system behaves
-in a deterministic manner, every time.
-
-Covered as per "Description" sections.
 
 ### UML Diagrams
 
@@ -153,23 +145,25 @@ Covered as per "Description" sections.
 ```mermaid
 %%{ init : { "theme" : "default", "flowchart" : { "curve" : "stepBefore" }}}%%
    sequenceDiagram
-    HdmiCecDemon->>HdmiCecHal:HdmiCecOpen
-    HdmiCecHal-->>HdmiCecDemon:return
-    Note over HdmiCecHal: Once open is completed soc will discover <br> physical and logical address internally, <br> based on device type and connection topology
-    HdmiCecDemon->>HdmiCecHal:HdmiCecSetRxCallback
-    HdmiCecHal-->>HdmiCecDemon:return
-    HdmiCecDemon ->>HdmiCecHal:HdmiCecGetLogicalAddress
-    HdmiCecHal-->>HdmiCecDemon:return
-    HdmiCecDemon ->>HdmiCecHal:HdmiCecGetPhysicalAddress
-    HdmiCecHal-->>HdmiCecDemon:return
-    Note over HdmiCecDemon,HdmiCecHal: sync cec transmit message
-    HdmiCecDemon ->>HdmiCecHal:HdmiCecTx
-    HdmiCecHal-->>HdmiCecDemon:return
-    Note over HdmiCecHal: for the above message if response expected or message originated <br> from the remote device HdmiCecSetRxCallback fn will trigger
-    HdmiCecHal-->>HdmiCecDemon:HdmiCecSetCallback triggered
-    Note over HdmiCecDemon,HdmiCecHal: Close the cec driver. Cec hal operation finished
-    HdmiCecDemon ->>HdmiCecHal:HdmiCecClose
-    HdmiCecHal-->>HdmiCecDemon:return
+    Caller->>HDMICECHAL:HdmiCecOpen
+    HDMICECHAL-->>Caller:return
+    Note over HDMICECHAL: Once HdmiCecOpen() is called, SOC intialises the HAL and discovers <br> physical and logical address internally, <br> based on device type and connection topology
+    Caller->>HDMICECHAL:HdmiCecSetRxCallback
+    HDMICECHAL-->>Caller:return
+    Caller->>HDMICECHAL:HdmiCecSetTxCallback
+    HDMICECHAL-->>Caller:return
+    Caller ->>HDMICECHAL:HdmiCecGetLogicalAddress
+    HDMICECHAL-->>Caller:return
+    Caller ->>HDMICECHAL:HdmiCecGetPhysicalAddress
+    HDMICECHAL-->>Caller:return
+    Note over Caller,HDMICECHAL: sync CEC transmit message
+    Caller ->>HDMICECHAL:HdmiCecTx
+    HDMICECHAL-->>Caller:return
+    Note over HDMICECHAL: For CEC message received from the remote device, HdmiCecSetRxCallback() will be triggered
+    HDMICECHAL-->>Caller:HdmiCecSetCallback triggered
+    Note over Caller,HDMICECHAL: De-initialise HAL
+    Caller ->>HDMICECHAL:HdmiCecClose
+    HDMICECHAL-->>Caller:return
  ```
 
 #### State Diagram
@@ -177,11 +171,11 @@ Covered as per "Description" sections.
 ```mermaid
 %%{ init : { "theme" : "default", "flowchart" : { "curve" : "stepBefore" }}}%%
     stateDiagram-v2
-        [*] --> Closed
-        Closed --> OpenState:HdmiCecOpen <br> will do cec driver open
-        OpenState --> ReadyState:Logical and physical address <br> allocated
-        note right of ReadyState : Ready state we can send and <br> receive messages.
-        OpenState --> Closed : HdmiCecClose
-        ReadyState --> Closed : HdmiCecClose
+        [*] --> UninitialisedState
+        UninitialisedState --> IntialisedState:HdmiCecOpen()
+        IntialisedState --> ReadyState:Logical and physical address <br> allocated
+        note right of ReadyState : Caller can send and <br> receive messages
+        IntialisedState --> UninitialisedState:HdmiCecClose()
+        ReadyState --> UninitialisedState:HdmiCecClose()
 
 ```
