@@ -33,7 +33,7 @@ style x fill:#9f9,stroke:#333,stroke-width:0.3px,align:left
  
 ## Component Runtime Execution Requirements
 
- CEC message transmit operation should complete within a reasonable time (a few hundred ms). Caller is responsible to perform retry operation as per the CEC specification requirements. 
+ CEC message transmit operation should complete within one second. Desired CEC response time is 250 milliseconds. Caller is responsible to perform retry operation as per the CEC specification requirements. 
  
  #TODO Sreenivasa to check on the specs
  
@@ -51,7 +51,7 @@ The interface is expected to support a single instantiation with a single proces
 
 ### Memory Model
 
-For transmit messages, it is upto the caller to allocate and free the memory for the message buffer. For receive messages, the HAL is responsible for memory management. The memory allocated cannot exceed <>. #TODO Sreenivasa to check the value
+For transmit messages, it is upto the caller to allocate and free the memory for the message buffer. For receive messages, the HAL is responsible for memory management. The memory allocated cannot exceed 256 bits.
 
 ### Power Management Requirements
 
