@@ -20,10 +20,11 @@
 
 
 /**
- * HDMI CEC HAL provides a set of APIs to communicate CEC messages with other CEC devices connected with HDMI cable. The purpose of the
- * HDMI CEC HAL is to retrieve discovered logical and physical address of host device and to transmit and receive messages to and from the
+ * HDMI CEC HAL provides a set of APIs to communicate CEC messages with other CEC devices 
+ * connected with HDMI cable. The purpose of the HAL is to retrieve discovered logical
+ * and physical address of the host device and to transmit and receive messages with the
  * remote device synchronously / asynchronously.
- */
+*/
 
 /**
 * @defgroup hdmicec hdmicec
@@ -38,42 +39,42 @@
 #ifdef __cplusplus
 extern "C" {
 #endif
-/*
- * Error Codes.
- */
-enum HDMI_CEC_IO_ERROR{
-	/// Hdmi cec input output operation is successful
-    HDMI_CEC_IO_SUCCESS = 0,
-	/// Hdmi cec io operation send and acknowledgement received
-    HDMI_CEC_IO_SENT_AND_ACKD = 1, 
-	/// Hdmi cec io operation send but acknowledgement not received
-    HDMI_CEC_IO_SENT_BUT_NOT_ACKD,
-	/// Hdmi cec io operation failed
-    HDMI_CEC_IO_SENT_FAILED,
-	/// Hdmi cec module is in invalid state and hence not able to do io operation
-    HDMI_CEC_IO_INVALID_STATE,
-	/// Invalid argument is passed to hdmi cec module
-    HDMI_CEC_IO_INVALID_ARGUMENT,
-	/// Logical address is not available for doing hdmi cec io operation
-    HDMI_CEC_IO_LOGICALADDRESS_UNAVAILABLE,
-	/// Hdmi cec io operation general error
-    HDMI_CEC_IO_GENERAL_ERROR,
-};
+	
+#include <inttypes.h>
+
+/**
+ * Error Codes
+*/
+typedef enum
+{
+    HDMI_CEC_STATUS_SUCCESS = 0,		/// Input output operation is successful
+    HDMI_CEC_STATUS_ERROR,			/// Operation general error
+    HDMI_CEC_STATUS_TIMEOUT,			/// Timeout
+    HDMI_CEC_STATUS_NOT_INITIALISED,		/// Module is not initialised
+    HDMI_CEC_STATUS_INVALID_ARGUMENT,		/// Invalid argument is passed to module
+    HDMI_CEC_STATUS_SENT_AND_ACKD,		/// Operation send and acknowledgement received	
+    HDMI_CEC_STATUS_SENT_BUT_NOT_ACKD,		/// Operation send but acknowledgement not received
+    HDMI_CEC_STATUS_SEND_FAILED,		/// Operation failed
+    HDMI_CEC_STATUS_LOGICALADDRESS_UNAVAILABLE,	/// Logical address is not available
+    HDMI_CEC_STATUS_MAX				/// Out of range - required to be the last item of the enum
+}HdmiCec_Status_t;
+
+typedef int32_t HdmiCec_Handle_t;		/// Module handle
 
 /**
  * @addtogroup HDMI_CEC
  * @{
  */
 /**
- * CEC HAL should call this function whenever there is a complete CEC packet received.
- * Upon each callback, only 1 complete CEC packet should be contained in the buffer.
+ * This function will be triggered when a complete CEC packet is received.
+ * Only 1 complete CEC packet should be contained in the buffer.
  * @param [in] handle - The handle used by application to uniquely identify the HAL instance.
  * @param [in] callbackData - callback data for the receive callback
- * @param [in] buf - buffer passed in hdmi receive callback
- * @param [in] len - length of buffer passed in receive hdmi callback
+ * @param [in] buf - buffer passed in CEC receive callback
+ * @param [in] len - length of buffer passed in receive CEC callback
  */
 
-typedef void (*HdmiCecRxCallback_t)(int handle, void *callbackData, unsigned char *buf, int len);
+typedef void (*HdmiCecRxCallback_t)(HdmiCec_Handle_t handle, void *callbackData, unsigned char *buf, int len);
 
 /**
  * CEC HAL should call this function to report the status of the latest transmit.
@@ -120,7 +121,7 @@ int HdmiCecOpen(int *handle);
  * @see HdmiCecOpen()
  *
  */
-int HdmiCecClose(int handle);
+int HdmiCec_Close(int handle);
 
 /**
  * @brief Add one Logical Addresses to be used by host device.
