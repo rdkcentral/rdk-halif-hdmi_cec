@@ -129,28 +129,26 @@ int HdmiCecClose(int handle);
 /**
  * @brief Adds one Logical Addresses to be used by host device.
  *
- * This function will block until the intended logical address is secured by the module.@n@n
+ * This function will block until the intended logical address is secured by the module.@n
+ * The driver will forward all received messages with destination being the acquired logical address.@n
+ * Driver should ACK all POLL messages destined to this logical address.@n@n
  *
- * In driver implementation, this API would trigger HAL sending a POLL CEC packet to the CEC Bus:@n@n
- *
+ * In driver implementation, this API would trigger HAL sending a POLL CEC packet to the CEC Bus:@n
  * Packet::HeaderBlock::Initiator   =  Requested LogicalAddress@n
  * Packet::HeaderBlock::Destination =  Requested LogicalAddress@n
- * Packet::DataBlock   			   =  Empty@n@n
+ * Packet::DataBlock   			   =  Empty
  *
- * The function will return HDMI_CEC_IO_SUCCESS if the POLL message is sent successfully and not ACK'd by any device on the bus. From this point on, the driver will forward all received messages with destination being the acquired logical address. Driver should ACK all POLL messages destined to this logical address.@n@n
+ * @param[in] handle                              - The handle returned from the HdmiCecOpen() function
+ * @param[in] logicalAddresses                    - The logical address to be acquired
  *
- * The function will return HDMI_CEC_IO_LOGICALADDRESS_UNAVAILABLE if the POLL message is sent and ACK'd by a device on the bus.@n@n
+ * @return HDMI_CEC_IO_ERROR                      - Status
+ * @retval HDMI_CEC_IO_SUCCESS                    - The POLL message is sent successfully and not ACK'd by any device on the bus
+ * @retval HDMI_CEC_IO_INVALID_STATE              - Module is not initialised
+ * @retval HDMI_CEC_IO_INVALID_ARGUMENT           - Parameter passed to this function is invalid
+ * @retval HDMI_CEC_IO_GENERAL_ERROR              - Underlying undefined platform error
+ * @retval HDMI_CEC_IO_LOGICALADDRESS_UNAVAILABLE - the POLL message is sent and ACK'd by a device on the bus
  *
- * The function will return relevant error code if the POLL message is not sent successfully.@n
- *
- * @param[in] handle                    - The handle returned from the HdmiCecOpen() function
- * @param[in] logicalAddresses          - The logical address to be acquired
- *
- * @return HDMI_CEC_IO_ERROR            - Status
- * @retval HDMI_CEC_IO_SUCCESS          - Success
- * @retval HDMI_CEC_IO_INVALID_STATE    - Module is not initialised
- * @retval HDMI_CEC_IO_INVALID_ARGUMENT - Parameter passed to this function is invalid
- * @retval HDMI_CEC_IO_GENERAL_ERROR    - Underlying undefined platform error
+ * #TODO: The function will return HDMI_CEC_IO_MESSAGE_NOT_SENT if the POLL message is not sent successfully.@n
  *
  * @pre HdmiCecOpen() must be called before calling this API.
  * @warning This API is NOT thread safe.
