@@ -173,23 +173,23 @@ NOTE: The module would operate deterministically if the above call sequence is f
 %%{ init : { "theme" : "default", "flowchart" : { "curve" : "stepBefore" }}}%%
    sequenceDiagram
     participant HAL as HDMI CEC HAL
-    Caller->>HAL:HdmiCecOpen
+    Caller->>HAL:HdmiCecOpen()
     Note over HAL: SOC intialises and discovers <br> physical and logical address internally <br> based on device type and connection topology
     HAL-->>Caller:return
-    Caller->>HAL:HdmiCecSetRxCallback
+    Caller->>HAL:HdmiCecSetRxCallback()
     HAL-->>Caller:return
-    Caller->>HAL:HdmiCecSetTxCallback
+    Caller->>HAL:HdmiCecSetTxCallback()
     HAL-->>Caller:return
-    Caller ->>HAL:HdmiCecGetLogicalAddress
+    Caller ->>HAL:HdmiCecGetLogicalAddress()
     HAL-->>Caller:return
-    Caller ->>HAL:HdmiCecGetPhysicalAddress
+    Caller ->>HAL:HdmiCecGetPhysicalAddress()
     HAL-->>Caller:return
-    Caller ->>HAL:HdmiCecTx
+    Caller ->>HAL:HdmiCecTx()
     Note over Caller,HAL: sync CEC transmit message
     HAL-->>Caller:return
     Note over HAL: For CEC message received from the remote device, HdmiCecSetRxCallback() will be triggered
-    HAL-->>Caller:HdmiCecRxCallback triggered
-    Caller ->>HAL:HdmiCecClose
+    HAL-->>Caller:HdmiCecRxCallback() triggered
+    Caller ->>HAL:HdmiCecClose()
     Note over Caller,HAL: SOC De-initialises 
     HAL-->>Caller:return
  ```
