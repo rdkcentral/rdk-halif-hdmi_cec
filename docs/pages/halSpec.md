@@ -11,9 +11,8 @@
 
 ## Table of Contents
 
-- [Overview](#overview)
-  - [Acronyms, Terms and Abbreviations](#acronyms-terms-and-abbreviations)
-  - [Description](#description)
+- [Acronyms, Terms and Abbreviations](#acronyms-terms-and-abbreviations)
+- [Description](#description)
 - [Component Runtime Execution Requirements](#component-runtime-execution-requirements)
   - [Initialization and Startup](#initialization-and-startup)
   - [Threading Model](#threading-model)
@@ -35,17 +34,16 @@
 - [Interface API Documentation](#interface-api-documentation)
   - [Theory of operation and key concepts](#theory-of-operation-and-key-concepts)
   - [Diagrams](#diagrams)
-    - [Operational Call Sequence](#operational-call-sequence)
 
-## Overview
-### Acronyms, Terms and Abbreviations
+## Acronyms, Terms and Abbreviations
 
 - `HDMI` - High-Definition Multimedia Interface
 - `CEC`  - Consumer Electronics Control
 - `HAL`  - Hardware Abstraction Layer
 - `API`  - Application Programming Interface
 
-### Description
+## Description
+
 The diagram below describes a high-level software architecture of the `HDMI` `CEC` module stack.
 
 ```mermaid
@@ -145,7 +143,7 @@ None
 
 ## Interface API Documentation
 
-`API` documentation will be provided by Doxygen.
+`API` documentation will be provided by Doxygen which will be generated from the header files.
 
 ### Theory of operation and key concepts
 
