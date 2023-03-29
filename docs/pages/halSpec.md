@@ -43,6 +43,7 @@
 - `HDMI` - High-Definition Multimedia Interface
 - `CEC`  - Consumer Electronics Control
 - `HAL`  - Hardware Abstraction Layer
+- `API`  - Application Programming Interface
 
 ### Description
 The diagram below describes a high-level software architecture of the `HDMI` `CEC` module stack.
@@ -58,7 +59,7 @@ style x fill:#9f9,stroke:#333,stroke-width:0.3px,align:left
 
  ```
 
-`HDMI` `CEC` HAL provides a set of APIs to facilitate communication through the driver for `CEC` messages with other `CEC` devices connected with HDMI cable.
+`HDMI` `CEC` HAL provides a set of `APIs` to facilitate communication through the driver for `CEC` messages with other `CEC` devices connected with HDMI cable.
 
 The interface retrieves and discovers logical and physical address of the host device, it is responsibile for transmitting and receiving messages with remote device(s) synchronously / asynchronously.
 
@@ -68,11 +69,11 @@ The interface retrieves and discovers logical and physical address of the host d
 
 ### Initialization and Startup
 
-Caller should initialize by calling `HdmiCecOpen()` before calling any other API.
+Caller should initialize by calling `HdmiCecOpen()` before calling any other `API`.
 
 ### Threading Model
 
-This interface is not required to be thread safe. Any caller invoking the APIs should ensure calls are made in a thread safe manner.
+This interface is not required to be thread safe. Any caller invoking the `APIs` should ensure calls are made in a thread safe manner.
 
 ### Process Model
 
@@ -88,7 +89,7 @@ Although this interface is not required to be involved in any of the power manag
 
 ### Asynchronous Notification Model
 
-For asynchronous transmit and receive operations, the following APIs and callback registrations are used:
+For asynchronous transmit and receive operations, the following `APIs` and callback registrations are used:
 
   1. For async transmit use: `HdmiCecTxAsync()`
   2. For async receive call back use: `HdmiCecSetRxCallback()`
@@ -102,7 +103,7 @@ There are no blocking calls. Synchronous calls should complete within a reasonab
 
 ### Internal Error Handling
 
-All the APIs should return error synchronously as a return argument. `HAL` is responsible for handling system errors (e.g. out of memory) internally.
+All the `APIs` must return error synchronously as a return argument. `HAL` is responsible for handling system errors (e.g. out of memory) internally.
 
 ### Persistence Model
 
@@ -128,15 +129,15 @@ This interface is required to not cause excessive memory and CPU utilization.
 
 ### Licensing
 
-HDMI CEC HAL implementation is expected to released under the Apache License 2.0. 
+`HDMI` `CEC` `HAL` implementation is expected to released under the Apache License 2.0. 
 
 ### Build Requirements
 
-`HDMI` `CEC` HAL source code must build into a shared library and must be named as `libRCECHal.so`.
+`HDMI` `CEC` `HAL` source code must build into a shared library and must be named as `libRCECHal.so`.
  
 ### Variability Management
 
-Any changes in the APIs should be reviewed and approved by the component architects.
+Any changes in the `APIs` should be reviewed and approved by the component architects.
 
 ### Platform or Product Customization
 
@@ -144,12 +145,13 @@ None
 
 ## Interface API Documentation
 
+`API` documentation will be provided by Doxygen.
 
 ### Theory of operation and key concepts
 
-The caller is expected to have complete control over the life cycle of the `HDMI` `CEC` HAL.
+The caller is expected to have complete control over the life cycle of the `HDMI` `CEC` `HAL`.
 
-1. Initialize the `HAL` using function: `HdmiCecOpen()` before making any other API calls. This call also discovers the physical address based on the connection topology. In case of source devices, `HdmiCecOpen()` should initiate the logical address discovery as part of this routine. In case of sink devices, logical address will be fixed and set using the `HdmiCecAddLogicalAddress()` API. If `HdmiCecOpen()` call fails, the HAL should return the respective error code, so that the caller can retry the operation.
+1. Initialize the `HAL` using function: `HdmiCecOpen()` before making any other `API` calls. This call also discovers the physical address based on the connection topology. In case of source devices, `HdmiCecOpen()` should initiate the logical address discovery as part of this routine. In case of sink devices, logical address will be fixed and set using the `HdmiCecAddLogicalAddress()`. If `HdmiCecOpen()` call fails, the `HAL` must return the respective error code, so that the caller can retry the operation.
 
 2. Once logical address and physical address are assigned, the caller will be able to send and receive the respective `CEC` messages.
 
@@ -159,7 +161,7 @@ The caller is expected to have complete control over the life cycle of the `HDMI
 
   - For asynchronous transmit, use the function: `HdmiCecTxAsync()`. The caller must register a callback via `HdmiCecSetTxCallback()` in order to receive the status or acknowledgement.
 
-3. De-intialise the HAL using the function: `HdmiCecClose()`
+3. De-intialise the `HAL` using the function: `HdmiCecClose()`
 
 NOTE: The module would operate deterministically if the above call sequence is followed.
 
@@ -170,24 +172,25 @@ NOTE: The module would operate deterministically if the above call sequence is f
 ```mermaid
 %%{ init : { "theme" : "default", "flowchart" : { "curve" : "stepBefore" }}}%%
    sequenceDiagram
-    Caller->>HDMICECHAL:HdmiCecOpen
-    Note over HDMICECHAL: SOC intialises and discovers <br> physical and logical address internally <br> based on device type and connection topology
-    HDMICECHAL-->>Caller:return
-    Caller->>HDMICECHAL:HdmiCecSetRxCallback
-    HDMICECHAL-->>Caller:return
-    Caller->>HDMICECHAL:HdmiCecSetTxCallback
-    HDMICECHAL-->>Caller:return
-    Caller ->>HDMICECHAL:HdmiCecGetLogicalAddress
-    HDMICECHAL-->>Caller:return
-    Caller ->>HDMICECHAL:HdmiCecGetPhysicalAddress
-    HDMICECHAL-->>Caller:return
-    Caller ->>HDMICECHAL:HdmiCecTx
-    Note over Caller,HDMICECHAL: sync CEC transmit message
-    HDMICECHAL-->>Caller:return
-    Note over HDMICECHAL: For CEC message received from the remote device, HdmiCecSetRxCallback() will be triggered
-    HDMICECHAL-->>Caller:HdmiCecRxCallback triggered
-    Caller ->>HDMICECHAL:HdmiCecClose
-    Note over Caller,HDMICECHAL: SOC De-initialises 
-    HDMICECHAL-->>Caller:return
+    participant HAL as HDMI CEC HAL
+    Caller->>HAL:HdmiCecOpen
+    Note over HAL: SOC intialises and discovers <br> physical and logical address internally <br> based on device type and connection topology
+    HAL-->>Caller:return
+    Caller->>HAL:HdmiCecSetRxCallback
+    HAL-->>Caller:return
+    Caller->>HAL:HdmiCecSetTxCallback
+    HAL-->>Caller:return
+    Caller ->>HAL:HdmiCecGetLogicalAddress
+    HAL-->>Caller:return
+    Caller ->>HAL:HdmiCecGetPhysicalAddress
+    HAL-->>Caller:return
+    Caller ->>HAL:HdmiCecTx
+    Note over Caller,HAL: sync CEC transmit message
+    HAL-->>Caller:return
+    Note over HAL: For CEC message received from the remote device, HdmiCecSetRxCallback() will be triggered
+    HAL-->>Caller:HdmiCecRxCallback triggered
+    Caller ->>HAL:HdmiCecClose
+    Note over Caller,HAL: SOC De-initialises 
+    HAL-->>Caller:return
  ```
 
