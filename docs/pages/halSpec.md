@@ -120,18 +120,18 @@ This interface is required to not cause excessive memory and CPU utilization.
 ### Quality Control
 
 - This interface is required to perform static analysis, our preferred tool is Coverity.
-- Copyright validation is required to be performed, e.g.: Black duck, FossID.
-- Have a zero-warning policy with regards to compiling. All warnings should be treated as error.
+- Open-source copyright validation is required to be performed, e.g.: Black duck, FossID.
+- Have a zero-warning policy with regards to compiling. All warnings are required to be treated as errors.
 - Use of memory analysis tools like Valgrind are encouraged, to identify leaks/corruptions.
-- `HAL` Tests will endeavour to create worst case scenarios to assist investigations.
+- Tests will endeavour to create worst case scenarios to assist investigations.
 
 ### Licensing
 
-`HDMI` `CEC` `HAL` implementation is expected to released under the Apache License 2.0. 
+The `HAL` implementation is expected to released under the Apache License 2.0. 
 
 ### Build Requirements
 
-`HDMI` `CEC` `HAL` source code must build into a shared library and must be named as `libRCECHal.so`.
+`The source code must build into a shared library and must be named as `libRCECHal.so`.
  
 ### Variability Management
 
