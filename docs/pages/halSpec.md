@@ -131,7 +131,7 @@ The `HAL` implementation is expected to released under the Apache License 2.0.
 
 ### Build Requirements
 
-`The source code must build into a shared library and must be named as `libRCECHal.so`.
+`The source code must build into a shared library and must be named as `libRCECHal.so`. The build mechanism must be independent of Yocto.
  
 ### Variability Management
 
