@@ -6,12 +6,14 @@
 
 | Date | Author | Comment | Version |
 | --- | --------- | --- | --- |
+| 13/03/23 | Review Team | Updated after final review | 1.0.2 |
 | 13/03/23 | Review Team | Edit  | 1.0.1 |
 | 06/12/22| Amit Patel | First Release | 1.0.0 |
 
 ## Table of Contents
 
 - [Acronyms, Terms and Abbreviations](#acronyms-terms-and-abbreviations)
+- [References](#references)
 - [Description](#description)
 - [Component Runtime Execution Requirements](#component-runtime-execution-requirements)
   - [Initialization and Startup](#initialization-and-startup)
@@ -41,11 +43,18 @@
 - `CEC`    - Consumer Electronics Control
 - `HAL`    - Hardware Abstraction Layer
 - `API`    - Application Programming Interface
-- `Caller` - Any application which is interacting with the `HAL` via the `APIs`
+- `Caller` - Any user of the interface via the `APIs`
+
+
+## References
+
+- `HDMI-CEC Specification` - High-Definition Multimedia Interface, Specification Version 1.3a, [https://www.hdmi.org/]
+  - (Downloadable via)[https://www.hdmi.org/requestform/clickrequestasync?docId=16]
+  - refer to Supplement 1 - Consumer Electronics Control (CEC) 
 
 ## Description
 
-The diagram below describes a high-level software architecture of the `HDMI` `CEC` module stack.
+The diagram below describes a high-level software architecture of the module stack.
 
 ```mermaid
 %%{ init : { "theme" : "forest", "flowchart" : { "curve" : "linear" }}}%%
@@ -55,23 +64,22 @@ x[HDMI CEC HAL]-->z[HDMI CEC SOC Driver];
 style y fill:#99CCFF,stroke:#333,stroke-width:0.3px,align:left
 style z fill:#fcc,stroke:#333,stroke-width:0.3px,align:left
 style x fill:#9f9,stroke:#333,stroke-width:0.3px,align:left
-
  ```
 
-`HDMI` `CEC` HAL provides a set of `APIs` to facilitate communication through the driver for `CEC` messages with other `CEC` devices connected with HDMI cable.
+This interface provides a set of `APIs` to facilitate communication through the driver for `CEC` messages with other `CEC` devices connected with HDMI cable.
 
 The interface retrieves and discovers logical and physical address of the host device, it is responsibile for transmitting and receiving messages with remote device(s) synchronously / asynchronously.
 
 The `CEC` protocol responsibilities will lie between the `caller` and the `HAL`. 
 
-  - The `caller` SHALL be responsible for `CEC` higher level protocol as defined in the `HDMI` `CEC` Specification (HDMI-CEC v1.3a Specifications) Section CEC 12.
+  - The `caller` SHALL be responsible for `CEC` higher level protocol as defined in `HDMI-CEC Specification` Section `CEC 12`.
   - The `caller` SHALL pass fully formed `CEC` messages to the `HAL` for the transmission. 
-  - The `HAL` SHALL be responsible for physical device discovery and announcements on the `CEC` network as defined in the HDMI-CEC specification Section CEC 10.
-  - The driver layer is responsible for the physical layer as defined in the Section CEC 4 (Electrical Specification), Section CEC 5 (Signalling and Bit Timings). The driver layer is out-of-scope for this document.
+  - The `HAL` SHALL be responsible for physical device discovery and announcements on the `CEC` network as defined in the `HDMI-CEC Specification` Section `CEC 10`.
+  - The driver layer is responsible for the physical layer as defined in the Section `CEC 4` (Electrical Specification) and Section `CEC 5` (Signalling and Bit Timings). The driver layer is out-of-scope for this document.
 
 ## Component Runtime Execution Requirements
 
-`CEC` message transmit operation should complete within one second. Desired `CEC` response time is **200 milliseconds** and maximum response time should be **1 second** as provided in the `CEC` specifications (HDMI-CEC v1.3a Specifications). `Caller` is responsible to perform retry operations as per the `CEC` specification requirements. `Caller` will retry each transmission in line with a requirement as specified in Sec CEC 7.1 of the HMDI-CEC specification.
+`CEC` message transmit operation should complete within one second. Desired `CEC` response time is **200 milliseconds** and maximum response time should be **1 second** as provided in the `CEC` specifications (`HDMI-CEC Specification`). `Caller` is responsible to perform retry operations as per the `CEC` specification requirements. `Caller` will retry each transmission in line with a requirement as specified in Section `CEC 7.1` of the HMDI-CEC specification.
 
 ### Initialization and Startup
 
@@ -87,10 +95,10 @@ This interface is required to support a single instantiation with a single proce
 
 ### Memory Model
 
-For transmit messages, it is upto the caller to allocate and free the memory for the message buffer. For receive messages, the `HAL` is responsible for memory management. The memory allocated cannot exceed **20 bytes** (HDMI-CEC v1.3a Section CEC 6).
+For transmit messages, it is upto the caller to allocate and free the memory for the message buffer. For receive messages, the `HAL` is responsible for memory management. The memory allocated cannot exceed **20 bytes** (`HDMI-CEC Specification` Section `CEC 6`).
 ### Power Management Requirements
 
-Although this interface is not required to be involved in any of the power management operations, the state transitions MUST not affect its operation. e.g. on resumption from a low power state, the `HDMI` `CEC` should operate as if no transition has occurred.
+Although this interface is not required to be involved in any of the power management operations, the state transitions MUST not affect its operation. e.g. on resumption from a low power state, the interface should operate as if no transition has occurred.
 
 ### Asynchronous Notification Model
 
@@ -112,7 +120,7 @@ All the `APIs` must return error synchronously as a return argument. `HAL` is re
 
 ### Persistence Model
 
-There is no requirement for the interface to persist any setting information. `Caller` is responsible to persist any settings related to `HDMI` `CEC` feature.
+There is no requirement for the interface to persist any setting information. `Caller` is responsible to persist any settings related to the `HAL`.
 
 ## Non-functional requirements
 
@@ -138,7 +146,7 @@ The `HAL` implementation is expected to released under the Apache License 2.0.
 
 ### Build Requirements
 
-`The source code must build into a shared library and must be named as `libRCECHal.so`. The build mechanism must be independent of Yocto.
+The source code must build into a shared library and must be named as `libRCECHal.so`. The build mechanism must be independent of Yocto.
  
 ### Variability Management
 
@@ -154,7 +162,7 @@ None
 
 ### Theory of operation and key concepts
 
-The caller is expected to have complete control over the life cycle of the `HDMI` `CEC` `HAL`.
+The caller is expected to have complete control over the life cycle of the `HAL`.
 
 1. Initialize the `HAL` using function: `HdmiCecOpen()` before making any other `API` calls. This call also discovers the physical address based on the connection topology. In case of source devices, `HdmiCecOpen()` should initiate the logical address discovery as part of this routine. In case of sink devices, logical address will be fixed and set using the `HdmiCecAddLogicalAddress()`. If `HdmiCecOpen()` call fails, the `HAL` must return the respective error code, so that the caller can retry the operation.
 
