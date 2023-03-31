@@ -87,8 +87,7 @@ This interface is required to support a single instantiation with a single proce
 
 ### Memory Model
 
-For transmit messages, it is upto the caller to allocate and free the memory for the message buffer. For receive messages, the `HAL` is responsible for memory management. The memory allocated cannot exceed **20 bytes**.
-
+For transmit messages, it is upto the caller to allocate and free the memory for the message buffer. For receive messages, the `HAL` is responsible for memory management. The memory allocated cannot exceed **20 bytes** (HDMI-CEC v1.3a Section CEC 6).
 ### Power Management Requirements
 
 Although this interface is not required to be involved in any of the power management operations, the state transitions MUST not affect its operation. e.g. on resumption from a low power state, the `HDMI` `CEC` should operate as if no transition has occurred.
