@@ -37,10 +37,11 @@
 
 ## Acronyms, Terms and Abbreviations
 
-- `HDMI` - High-Definition Multimedia Interface
-- `CEC`  - Consumer Electronics Control
-- `HAL`  - Hardware Abstraction Layer
-- `API`  - Application Programming Interface
+- `HDMI`   - High-Definition Multimedia Interface
+- `CEC`    - Consumer Electronics Control
+- `HAL`    - Hardware Abstraction Layer
+- `API`    - Application Programming Interface
+- `Caller` - Any application which is interacting with the `HAL` via the `APIs`
 
 ## Description
 
@@ -61,13 +62,20 @@ style x fill:#9f9,stroke:#333,stroke-width:0.3px,align:left
 
 The interface retrieves and discovers logical and physical address of the host device, it is responsibile for transmitting and receiving messages with remote device(s) synchronously / asynchronously.
 
+The `CEC` protocol responsibilities will lie between the `caller` and the `HAL`. 
+
+  - The `caller` SHALL be responsible for `CEC` higher level protocol as defined in the `HDMI` `CEC` Specification (HDMI-CEC v1.3a Specifications) Section CEC 12.
+  - The `caller` SHALL pass fully formed `CEC` messages to the `HAL` for the transmission. 
+  - The `HAL` SHALL be responsible for physical device discovery and announcements on the `CEC` network as defined in the HDMI-CEC specification Section CEC 10.
+  - The driver layer is responsible for the physical layer as defined in the Section CEC 4 (Electrical Specification), Section CEC 5 (Signalling and Bit Timings). The driver layer is out-of-scope for this document.
+
 ## Component Runtime Execution Requirements
 
-`CEC` message transmit operation should complete within one second. Desired `CEC` response time is **250 milliseconds** and maximum response time should be **1 second** as provided in the `CEC` specifications. Caller is responsible to perform retry operations as per the `CEC` specification requirements.
+`CEC` message transmit operation should complete within one second. Desired `CEC` response time is **200 milliseconds** and maximum response time should be **1 second** as provided in the `CEC` specifications (HDMI-CEC v1.3a Specifications). `Caller` is responsible to perform retry operations as per the `CEC` specification requirements. `Caller` will retry each transmission in line with a requirement as specified in Sec CEC 7.1 of the HMDI-CEC specification.
 
 ### Initialization and Startup
 
-Caller should initialize by calling `HdmiCecOpen()` before calling any other `API`.
+`Caller` should initialize by calling `HdmiCecOpen()` before calling any other `API`.
 
 ### Threading Model
 
@@ -105,7 +113,7 @@ All the `APIs` must return error synchronously as a return argument. `HAL` is re
 
 ### Persistence Model
 
-There is no requirement for the interface to persist any setting information. Caller is responsible to persist any settings related to `HDMI` `CEC` feature.
+There is no requirement for the interface to persist any setting information. `Caller` is responsible to persist any settings related to `HDMI` `CEC` feature.
 
 ## Non-functional requirements
 
