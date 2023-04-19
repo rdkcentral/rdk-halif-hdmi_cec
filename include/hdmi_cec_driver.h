@@ -133,7 +133,9 @@ int HdmiCecClose(int handle);
  *
  * This function will block until the intended logical address is secured by the module.@n
  * The driver will forward all received messages with destination being the acquired logical address.@n
- * Driver should ACK all POLL messages destined to this logical address.@n@n
+ * Driver should ACK all POLL messages destined to this logical address.@n
+ * This API is only applicable for sink devices. Supported logical address value must be 0x0.@n
+ * Invoking this API in source device must return HDMI_CEC_IO_INVALID_ARGUMENT@n@n
  *
  * In driver implementation, this API would trigger HAL sending a POLL CEC packet to the CEC Bus:@n
  * Packet::HeaderBlock::Initiator   =  Requested LogicalAddress@n
@@ -156,6 +158,7 @@ int HdmiCecClose(int handle);
  * @note This API is not required if the SOC is performing the logical address discovery.
  *
  * @see HdmiCecRemoveLogicalAddress(), HdmiCecGetLogicalAddress()
+ * 
  */
 int HdmiCecAddLogicalAddress(int handle, int logicalAddresses);
 
@@ -166,6 +169,7 @@ int HdmiCecAddLogicalAddress(int handle, int logicalAddresses);
  * Once released, the module must not ACK any POLL message destined to the
  * released address.@n
  * Subsequent calls to this API will return HDMI_CEC_IO_SUCCESS.
+ * This API is only applicable for sink devices. Invoking this API in source device must return HDMI_CEC_IO_INVALID_ARGUMENT@n@n
  *
  * @param[in] handle                   - The handle returned from the HdmiCecOpen() function
  * @param[in] logicalAddresses         - The logicalAddresses to be released
@@ -186,7 +190,9 @@ int HdmiCecRemoveLogicalAddress(int handle, int logicalAddresses);
 /**
  * @brief Gets the Logical Address obtained by the module.
  *
- * This function gets the logical address for the specified device type.
+ * This function gets the logical address for the specified device type. @n
+ * For sink devices, if logical address is not added or removed, the logical address returned will be 0x0F.
+ * For source devices, logical address returned must be in between 0x00 and 0x0F, excluding both the values.
  *
  * @param[in] handle                    - The handle returned from the HdmiCecOpen() function
  * @param[in] devType                   - The device type (tuner, record, playback etc.)
