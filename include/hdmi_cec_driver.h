@@ -132,12 +132,12 @@ int HdmiCecClose(int handle);
  * @brief Adds one Logical Addresses to be used by host device.
  *
  * This function will block until the intended logical address is secured by the module.@n
- * The driver will forward all received messages with destination being the acquired logical address.@n
- * Driver should ACK all POLL messages destined to this logical address.@n
+ * HAL will forward all received messages with destination being the acquired logical address.@n
+ * HAL should ACK all POLL messages destined to this logical address.@n
  * This API is only applicable for sink devices. Supported logical address value must be 0x0.@n
  * Invoking this API in source device must return HDMI_CEC_IO_INVALID_ARGUMENT@n@n
  *
- * In driver implementation, this API would trigger HAL sending a POLL CEC packet to the CEC Bus:@n
+ * In HAL implementation, this API would trigger HAL sending a POLL CEC packet to the CEC Bus:@n
  * Packet::HeaderBlock::Initiator   =  Requested LogicalAddress@n
  * Packet::HeaderBlock::Destination =  Requested LogicalAddress@n
  * Packet::DataBlock   			   =  Empty
@@ -251,7 +251,7 @@ void HdmiCecGetPhysicalAddress(int handle, unsigned int *physicalAddress);
  *
  * When receiving, the returned buffer should not contain EOM and ACK bits.@n
  * 
- * When transmitting, it is driver's responsibility to insert EOM bit and ACK bit 
+ * When transmitting, it is HAL's responsibility to insert EOM bit and ACK bit 
  * for each header or data block.
  *
  * When HdmiCecSetRxCallback() is called, it replaces the previous set cbfunc and data
