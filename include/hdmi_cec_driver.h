@@ -132,10 +132,12 @@ int HdmiCecClose(int handle);
  * @brief Adds one Logical Addresses to be used by host device.
  *
  * This function will block until the intended logical address is secured by the module.@n
- * The driver will forward all received messages with destination being the acquired logical address.@n
- * Driver should ACK all POLL messages destined to this logical address.@n@n
+ * HAL will forward all received messages with destination being the acquired logical address.@n
+ * HAL should ACK all POLL messages destined to this logical address.@n
+ * This API is only applicable for sink devices. Supported logical address value must be 0x0.@n
+ * Invoking this API in source device must return HDMI_CEC_IO_INVALID_ARGUMENT@n@n
  *
- * In driver implementation, this API would trigger HAL sending a POLL CEC packet to the CEC Bus:@n
+ * In HAL implementation, this API would trigger HAL sending a POLL CEC packet to the CEC Bus:@n
  * Packet::HeaderBlock::Initiator   =  Requested LogicalAddress@n
  * Packet::HeaderBlock::Destination =  Requested LogicalAddress@n
  * Packet::DataBlock   			   =  Empty
@@ -156,6 +158,7 @@ int HdmiCecClose(int handle);
  * @note This API is not required if the SOC is performing the logical address discovery.
  *
  * @see HdmiCecRemoveLogicalAddress(), HdmiCecGetLogicalAddress()
+ * 
  */
 int HdmiCecAddLogicalAddress(int handle, int logicalAddresses);
 
@@ -166,6 +169,7 @@ int HdmiCecAddLogicalAddress(int handle, int logicalAddresses);
  * Once released, the module must not ACK any POLL message destined to the
  * released address.@n
  * Subsequent calls to this API will return HDMI_CEC_IO_SUCCESS.
+ * This API is only applicable for sink devices. Invoking this API in source device must return HDMI_CEC_IO_INVALID_ARGUMENT@n@n
  *
  * @param[in] handle                   - The handle returned from the HdmiCecOpen() function
  * @param[in] logicalAddresses         - The logicalAddresses to be released
@@ -186,7 +190,9 @@ int HdmiCecRemoveLogicalAddress(int handle, int logicalAddresses);
 /**
  * @brief Gets the Logical Address obtained by the module.
  *
- * This function gets the logical address for the specified device type.
+ * This function gets the logical address for the specified device type. @n
+ * For sink devices, if logical address is not added or removed, the logical address returned will be 0x0F.
+ * For source devices, logical address returned must be in between 0x00 and 0x0F, excluding both the values.
  *
  * @param[in] handle                    - The handle returned from the HdmiCecOpen() function
  * @param[in] devType                   - The device type (tuner, record, playback etc.)
@@ -202,6 +208,7 @@ int HdmiCecRemoveLogicalAddress(int handle, int logicalAddresses);
  * @warning This API is NOT thread safe.
  * @note This API is not required if the SOC is performing the logical address discovery.
  * @see HdmiCecAddLogicalAddress(), HdmiCecRemoveLogicalAddress()
+ * TODO: Unused variable devType. Need to remove.
  */
 int HdmiCecGetLogicalAddress(int handle, int devType,  int *logicalAddress);
 
@@ -244,7 +251,7 @@ void HdmiCecGetPhysicalAddress(int handle, unsigned int *physicalAddress);
  *
  * When receiving, the returned buffer should not contain EOM and ACK bits.@n
  * 
- * When transmitting, it is driver's responsibility to insert EOM bit and ACK bit 
+ * When transmitting, it is HAL's responsibility to insert EOM bit and ACK bit 
  * for each header or data block.
  *
  * When HdmiCecSetRxCallback() is called, it replaces the previous set cbfunc and data
@@ -320,6 +327,7 @@ int HdmiCecSetTxCallback(int handle, HdmiCecTxCallback_t cbfunc, void *data);
  * @pre  HdmiCecOpen() should be called before calling this API.
  * @warning  This API is Not thread safe.
  * @see HdmiCecTxAsync(), HdmiCecSetRxCallback()
+ * TODO: Need to check the why result argument is required.
  */
 int HdmiCecTx(int handle, const unsigned char *buf, int len, int *result);
 
