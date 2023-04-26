@@ -135,10 +135,11 @@ This interface is required to not cause excessive memory and CPU utilization.
 ### Quality Control
 
 - This interface is required to perform static analysis, our preferred tool is Coverity.
-- Open-source copyright validation is required to be performed, e.g.: Black duck, FossID.
-- Have a zero-warning policy with regards to compiling. All warnings are required to be treated as errors.
+- Have a zero-warning policy with regards to compiling. All warnings are required to be treated as error.
+- Copyright validation is required to be performed, e.g.: Black duck, FossID.
 - Use of memory analysis tools like Valgrind are encouraged, to identify leaks/corruptions.
-- Tests will endeavour to create worst case scenarios to assist investigations.
+- `HAL` Tests will endeavour to create worst case scenarios to assist investigations.
+- Improvements by any party to the testing suite are required to be fed back.
 
 ### Licensing
 
@@ -185,6 +186,7 @@ NOTE: The module would operate deterministically if the above call sequence is f
 ```mermaid
 %%{ init : { "theme" : "default", "flowchart" : { "curve" : "stepBefore" }}}%%
    sequenceDiagram
+    participant Caller as Caller
     participant HAL as HDMI CEC HAL
     Caller->>HAL:HdmiCecOpen()
     Note over HAL: SOC intialises and discovers <br> physical and logical address internally <br> based on device type and connection topology
