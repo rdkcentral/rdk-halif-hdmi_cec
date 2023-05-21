@@ -170,6 +170,8 @@ int HdmiCecAddLogicalAddress(int handle, int logicalAddresses);
  * released address.@n
  * Subsequent calls to this API will return HDMI_CEC_IO_SUCCESS.
  * This API is only applicable for sink devices. Invoking this API in source device must return HDMI_CEC_IO_INVALID_ARGUMENT@n@n
+ * 
+ * #TODO if we try to remove it again. Should throw an error. It should return invalid argument. It will be done in next phase.
  *
  * @param[in] handle                   - The handle returned from the HdmiCecOpen() function
  * @param[in] logicalAddresses         - The logicalAddresses to be released
