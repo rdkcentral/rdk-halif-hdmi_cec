@@ -93,7 +93,7 @@ typedef void (*HdmiCecTxCallback_t)(int handle, void *callbackData, int result);
  *
  * @return HDMI_CEC_IO_ERROR            - Status
  * @retval HDMI_CEC_IO_SUCCESS          - Success
- * @retval HDMI_CEC_IO_INVALID_STATE    - Function is already open
+ * @retval HDMI_CEC_IO_INVALID_STATE    - Function is already open. This error code will deprecated in the next phase.
  * @retval HDMI_CEC_IO_INVALID_ARGUMENT - Parameter passed to this function is invalid
  * @retval HDMI_CEC_IO_GENERAL_ERROR    - Underlying undefined platform error
  *
