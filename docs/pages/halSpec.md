@@ -4,11 +4,11 @@
 
 ## Version History
 
-| Date | Author | Comment | Version |
-| --- | --------- | --- | --- |
-| 13/03/23 | Review Team | Updated after final review | 1.0.2 |
-| 13/03/23 | Review Team | Edit  | 1.0.1 |
-| 06/12/22| Amit Patel | First Release | 1.0.0 |
+| Date | Comment | Version |
+| --- | --- | --- |
+| 13/03/23 | Updated after final review | 1.0.2 |
+| 13/03/23 | Edit  | 1.0.1 |
+| 06/12/22| First Release | 1.0.0 |
 
 ## Table of Contents
 
@@ -189,11 +189,14 @@ NOTE: The module would operate deterministically if the above call sequence is f
     participant Caller as Caller
     participant HAL as HDMI CEC HAL
     Caller->>HAL:HdmiCecOpen()
-    Note over HAL: SOC intialises and discovers <br> physical and logical address internally <br> based on device type and connection topology
+    Note over HAL: SOC intialises and discovers <br> physical address based on the connection topology <br> source devices discovers logical address internally  based on device type.
     HAL-->>Caller:return
     Caller->>HAL:HdmiCecSetRxCallback()
     HAL-->>Caller:return
     Caller->>HAL:HdmiCecSetTxCallback()
+    HAL-->>Caller:return
+    Caller ->>HAL:HdmiCecAddLogicalAddress()
+    Note over Caller: Sink devices should set the logical address using the API <br> HdmiCecAddLogicalAddress (Only for sink devices)
     HAL-->>Caller:return
     Caller ->>HAL:HdmiCecGetLogicalAddress()
     HAL-->>Caller:return
