@@ -91,16 +91,20 @@ typedef void (*HdmiCecTxCallback_t)(int handle, void *callbackData, int result);
  * This function is required to be called before the other APIs in this module.@n
  * Subsequent calls to this API will return HDMI_CEC_IO_SUCCESS.
  *
- * @param [out] handle                  - The handle used by application to uniquely 
- *                                        identify the HAL instance
+ * @param [out] handle                    - The handle used by application to uniquely 
+ *                                          identify the HAL instance
  *
- * @return HDMI_CEC_IO_ERROR            - Status
- * @retval HDMI_CEC_IO_SUCCESS          - Success
- * @retval HDMI_CEC_IO_INVALID_STATE    - Function is already open. 
- *                                        This error code will deprecated in the next phase.
- * @retval HDMI_CEC_IO_INVALID_ARGUMENT - Parameter passed to this function is invalid
- * @retval HDMI_CEC_IO_GENERAL_ERROR    - Underlying undefined platform error
- *
+ * @return HDMI_CEC_IO_ERROR              - Status
+ * @retval HDMI_CEC_IO_SUCCESS            - Success
+ * @retval HDMI_CEC_IO_INVALID_STATE      - Function is already open. 
+ *                                          This error code will deprecated in the next phase.
+ * @retval HDMI_CEC_IO_INVALID_ARGUMENT   - Parameter passed to this function is invalid
+ * @retval HDMI_CEC_IO_GENERAL_ERROR      - Underlying undefined platform error
+ * HDMI_CEC_IO_LOGICALADDRESS_UNAVAILABLE - Logical address is not available for sink devices. 
+ * For source devices logical address discovery will not happen in HdmiCecOpen ()
+ * 
+ * #TODO in all open/init scenarios. Change the HDMI_CEC_IO_INVALID_STATE 
+ *   to HDMI_CEC_IO_ALREADY_OPEN. Will do it in the next phase
  * @warning This API is NOT thread safe.
  *
  * @see HdmiCecClose()
