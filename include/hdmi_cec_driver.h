@@ -103,13 +103,13 @@ typedef void (*HdmiCecTxCallback_t)(int handle, void *callbackData, int result);
  * HDMI_CEC_IO_LOGICALADDRESS_UNAVAILABLE - Logical address is not available for sink devices. 
  * For source devices logical address discovery will not happen in HdmiCecOpen ()
  * 
- * #TODO in all open/init scenarios. Change the HDMI_CEC_IO_INVALID_STATE 
+ * @todo in all open/init scenarios. Change the HDMI_CEC_IO_INVALID_STATE 
  *   to HDMI_CEC_IO_ALREADY_OPEN. Will do it in the next phase
  * @warning This API is NOT thread safe.
  *
  * @see HdmiCecClose()
  *
- * TODO: Change the return type to HDMI_CEC_IO_ERROR instead of int
+ * @todo: Change the return type to HDMI_CEC_IO_ERROR instead of int
  */
 int HdmiCecOpen(int *handle);
 
@@ -183,7 +183,7 @@ int HdmiCecAddLogicalAddress(int handle, int logicalAddresses);
  * This API is only applicable for sink devices. Invoking this API in source 
  *  device must return HDMI_CEC_IO_INVALID_ARGUMENT@n@n
  * 
- * #TODO if we try to remove it again. Should throw an error. It should return invalid argument. 
+ * @todo if we try to remove it again. Should throw an error. It should return invalid argument. 
  *       It will be done in next phase.
  *
  * @param[in] handle                   - The handle returned from the HdmiCecOpen() function
@@ -225,7 +225,7 @@ int HdmiCecRemoveLogicalAddress(int handle, int logicalAddresses);
  * @warning This API is NOT thread safe.
  * @note This API is not required if the SOC is performing the logical address discovery.
  * @see HdmiCecAddLogicalAddress(), HdmiCecRemoveLogicalAddress()
- * TODO: Unused variable devType. Need to remove.
+ * @todo: Unused variable devType. Need to remove.
  */
 int HdmiCecGetLogicalAddress(int handle, int devType,  int *logicalAddress);
 
@@ -241,7 +241,7 @@ int HdmiCecGetLogicalAddress(int handle, int devType,  int *logicalAddress);
  * @warning This API is NOT thread safe.
  * @see HdmiCecGetLogicalAddress()
  *
- * TODO: Need to return HDMI_CEC_IO_ERROR for HdmiCecOpen() failure
+ * @todo: Need to return HDMI_CEC_IO_ERROR for HdmiCecOpen() failure
  */
 void HdmiCecGetPhysicalAddress(int handle, unsigned int *physicalAddress);
 
@@ -350,8 +350,8 @@ int HdmiCecSetTxCallback(int handle, HdmiCecTxCallback_t cbfunc, void *data);
  * @pre  HdmiCecOpen() should be called before calling this API.
  * @warning  This API is Not thread safe.
  * @see HdmiCecTxAsync(), HdmiCecSetRxCallback()
- * TODO: Need to check the why result argument is required.
- * TODO: sreeni will come back one if HDMI_CEC_IO_LOGICALADDRESS_UNAVAILABLE return type is required for this function.
+ * @todo: Need to check the why result argument is required.
+ * @todo: sreeni will come back one if HDMI_CEC_IO_LOGICALADDRESS_UNAVAILABLE return type is required for this function.
  */
 int HdmiCecTx(int handle, const unsigned char *buf, int len, int *result);
 
