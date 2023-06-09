@@ -1,13 +1,15 @@
-Contributing
-This sourcetree is a POC at the moment, and will migrate to rdkcentral codespace in GitHub, there is no requirement from development point of view to have multiple git repo's. As part of the POC a single source of truth is now possible, due to the versioning of the interfaces.
+# Contributing
 
-Each of the hals will be split into separate git repo's and these will be controlled with documentation, doxygen commands, and tests released against a fixed version.
+- If you wish to make code contributions to this project, the source is hosted at [github.com/rdkcentral](https://github.com/rdkcentral).
 
-RDK-V HdmiCec HAL (Versioned Addition)
+You can submit your changes for review via that site, by raising an issue in github, (https://github.com/rdkcentral/xxxx/issues), and following the sequence below.
 
-If you wish to make code contributions to this project, the source is hosted at github.com/comcast-sky.
-You can submit your changes for review via that site, and they will be reviewed for including in the next tag if required.
+- create a branch with a name follow the guidelines gh(x)_(synopsis)
+- where x is the ticket number
+- where synopsis is a short synopsis for the reason for the branch.
+- create a pull request (https://github.com/rdkcentral/xxxx/compare) when the code changes are ready for review.
+- The team will review, and if accepted your changes will be merged to the mainline.
 
-Please follow the workflow when making a contribution.
+- In order to contribute code, first-time users are requested to agree to the [license](https://wiki.rdkcentral.com/signup.action).
 
-In order to contribute code, first-time users are requested to agree to the license.
+- where `xxxx` is your module name
