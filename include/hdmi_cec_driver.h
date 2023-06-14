@@ -20,19 +20,33 @@
 
 
 /**
- * HDMI CEC HAL provides a set of APIs to communicate CEC messages with other CEC devices
- * HDMI CEC HAL is to retrieve discovered logical and physical address of host device 
- * and to transmit and receive messages to and from the
- * connected with HDMI cable. The purpose of the HAL is to retrieve discovered logical
- * and physical address of the host device and to transmit and receive messages with the
- * remote device synchronously / asynchronously.
  */
 
 /**
- * @defgroup hdmicec hdmicec
+ * @addtogroup HPK HPK
  * @{
- * @defgroup ccec ccec
+ * @par The Hardware Porting Kit
+ * HPK is the next evolution of the well-defined Hardware Abstraction Layer
+ * (HAL), but augmented with more comprehensive documentation and test suites
+ * that OEM or SOC vendors can use to self-certify their ports before taking
+ * them to RDKM for validation or to an operator for final integration and
+ * deployment. The Hardware Porting Kit effectively enables an OEM and/or SOC
+ * vendor to self-certify their own Video Accelerator devices, with minimal RDKM
+ * assistance.
+ *
+ */
+
+/**
+ * @defgroup HDMI_CEC HDMI_CEC
  * @{
+ * @par Application API Specification
+ * HDMI CEC HAL provides a set of APIs to communicate CEC messages with other
+ * CEC devices HDMI CEC HAL is to retrieve discovered logical and physical
+ * address of host device and to transmit and receive messages to and from the
+ * connected with HDMI cable. The purpose of the HAL is to retrieve discovered
+ * logical and physical address of the host device and to transmit and receive
+ * messages with the remote device synchronously / asynchronously.
+ *
  */
 
 
@@ -60,11 +74,6 @@ enum HDMI_CEC_IO_ERROR
 };
 
 /**
- * @addtogroup HDMI_CEC
- * @{
- */
-
-/**
  * @brief This function will be triggered when a complete CEC packet is received.
  *
  * Upon each callback, only 1 complete packet should be contained in the buffer.
@@ -86,7 +95,7 @@ typedef void (*HdmiCecRxCallback_t)(int handle, void *callbackData, unsigned cha
 typedef void (*HdmiCecTxCallback_t)(int handle, void *callbackData, int result);
 
 /**
- * @brief Initializes the CEC HAL.
+ * @brief Initializes the HDMI CEC HAL.
  *
  * This function is required to be called before the other APIs in this module.@n
  * Subsequent calls to this API will return HDMI_CEC_IO_SUCCESS.
@@ -114,7 +123,7 @@ typedef void (*HdmiCecTxCallback_t)(int handle, void *callbackData, int result);
 int HdmiCecOpen(int *handle);
 
 /**
- * @brief Closes an instance of CEC HAL.
+ * @brief Closes an instance of HDMI CEC HAL.
  *
  * This function will uninitialize the module.@n
  * Close will clear up registered logical addresses.@n
@@ -378,12 +387,11 @@ int HdmiCecTx(int handle, const unsigned char *buf, int len, int *result);
  * @see HdmiCecTx(), HdmiCecSetRxCallback()
  */
 int HdmiCecTxAsync(int handle, const unsigned char *buf, int len);
-/** @} */
 #ifdef __cplusplus
 }
 #endif
-#endif
+#endif // End of HDMI_CEC_DRIVER_H_
 
 
-/** @} */
-/** @} */
+/** @} */ // End of HDMI CEC
+/** @} */ // End of HPK
