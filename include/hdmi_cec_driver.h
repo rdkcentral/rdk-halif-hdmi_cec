@@ -356,7 +356,7 @@ int HdmiCecSetTxCallback(int handle, HdmiCecTxCallback_t cbfunc, void *data);
  *                                                    by the receiver.
  * @retval HDMI_CEC_IO_SENT_FAILED                - send message failed.
  *
- * @pre  HdmiCecOpen() should be called before calling this API.
+ * @pre  HdmiCecOpen(), HdmiCecSetRxCallback() should be called before calling this API.
  * @warning  This API is Not thread safe.
  * @see HdmiCecTxAsync(), HdmiCecSetRxCallback()
  * @todo: Need to check the why result argument is required.
@@ -383,6 +383,7 @@ int HdmiCecTx(int handle, const unsigned char *buf, int len, int *result);
  * @retval HDMI_CEC_IO_INVALID_ARGUMENT           - Parameter passed to this function is invalid
  * @retval HDMI_CEC_IO_GENERAL_ERROR              - Underlying undefined platform error
  *
+ * @pre  HdmiCecOpen(), HdmiCecSetRxCallback(), HdmiCecSetTxCallback()  should be called before calling this API.
  * @warning  This API is Not thread safe.
  * @see HdmiCecTx(), HdmiCecSetRxCallback()
  */
