@@ -360,7 +360,7 @@ int HdmiCecSetTxCallback(int handle, HdmiCecTxCallback_t cbfunc, void *data);
  * @warning  This API is Not thread safe.
  * @see HdmiCecTxAsync(), HdmiCecSetRxCallback()
  * @todo: Need to check the why result argument is required.
- * @todo: sreeni will come back one if HDMI_CEC_IO_LOGICALADDRESS_UNAVAILABLE return type is required for this function.
+ * @todo: SKY will come back one if HDMI_CEC_IO_LOGICALADDRESS_UNAVAILABLE return type is required for this function.
  */
 int HdmiCecTx(int handle, const unsigned char *buf, int len, int *result);
 
