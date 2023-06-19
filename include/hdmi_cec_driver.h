@@ -110,7 +110,8 @@ typedef void (*HdmiCecTxCallback_t)(int handle, void *callbackData, int result);
  * @retval HDMI_CEC_IO_INVALID_ARGUMENT   - Parameter passed to this function is invalid
  * @retval HDMI_CEC_IO_GENERAL_ERROR      - Underlying undefined platform error
  * HDMI_CEC_IO_LOGICALADDRESS_UNAVAILABLE - Logical address is not available for sink devices. 
- * For source devices logical address discovery will not happen in HdmiCecOpen ()
+ * 
+ * @note For sink devices logical address discovery will not happen in HdmiCecOpen()
  * 
  * @todo in all open/init scenarios. Change the HDMI_CEC_IO_INVALID_STATE 
  *   to HDMI_CEC_IO_ALREADY_OPEN. Will do it in the next phase
