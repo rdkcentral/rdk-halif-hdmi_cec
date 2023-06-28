@@ -68,7 +68,7 @@ enum HDMI_CEC_IO_ERROR
     HDMI_CEC_IO_INVALID_STATE,              ///< Module is not intialised
     HDMI_CEC_IO_INVALID_ARGUMENT,           ///< Invalid argument is passed to the module
     HDMI_CEC_IO_LOGICALADDRESS_UNAVAILABLE, ///< Logical address is not available
-    HDMI_CEC_IO_GENERAL_ERROR,              ///< Operation general error //@todo need to check if any of the platform implementation is using it. Else remove it. Pls do it in all the functions.
+    HDMI_CEC_IO_GENERAL_ERROR,              ///< Operation general error //@todo need to remove it in the next phase. Need to replace with proper error codes.
     HDMI_CEC_IO_MAX                         ///< Out of range - required to be the 
                                             ///< last item of the enum
 };
