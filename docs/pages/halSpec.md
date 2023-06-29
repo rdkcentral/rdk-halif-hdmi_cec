@@ -4,7 +4,7 @@
 
 ## Version History
 
-| Date | Comment | Version |
+| Date (DD/MM/YY) | Comment | Version |
 | --- | --- | --- |
 | 13/03/23 | Updated after final review | 1.0.2 |
 | 13/03/23 | Edit  | 1.0.1 |
@@ -48,8 +48,8 @@
 
 ## References
 
-- `HDMI-CEC Specification` - High-Definition Multimedia Interface, Specification Version 1.3a, [https://www.hdmi.org/]
-  - (Downloadable via)[https://www.hdmi.org/requestform/clickrequestasync?docId=16]
+- `HDMI-CEC Specification` - High-Definition Multimedia Interface, Specification Version 1.3a, (https://www.hdmi.org/)
+  - Downloadable via [this link](https://www.hdmi.org/requestform/clickrequestasync?docId=16)
   - refer to Supplement 1 - Consumer Electronics Control (CEC) 
 
 ## Description

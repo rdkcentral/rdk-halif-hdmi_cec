@@ -18,10 +18,6 @@
 */
 
 
-
-/**
- */
-
 /**
  * @addtogroup HPK HPK
  * @{
@@ -37,7 +33,7 @@
  */
 
 /**
- * @defgroup HDMI_CEC HDMI_CEC
+ * @defgroup HDMI_CEC_HAL HDMI CEC HAL
  * @{
  * @par Application API Specification
  * HDMI CEC HAL provides a set of APIs to communicate CEC messages with other
@@ -420,5 +416,5 @@ int HdmiCecTxAsync(int handle, const unsigned char *buf, int len);
 #endif // End of HDMI_CEC_DRIVER_H_
 
 
-/** @} */ // End of HDMI CEC
+/** @} */ // End of HDMI_CEC_HAL
 /** @} */ // End of HPK
