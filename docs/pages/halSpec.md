@@ -4,11 +4,11 @@
 
 ## Version History
 
-| Date | Author | Comment | Version |
-| --- | --------- | --- | --- |
-| 13/03/23 | Review Team | Updated after final review | 1.0.2 |
-| 13/03/23 | Review Team | Edit  | 1.0.1 |
-| 06/12/22| Amit Patel | First Release | 1.0.0 |
+| Date (DD/MM/YY) | Comment | Version |
+| --- | --- | --- |
+| 13/03/23 | Updated after final review | 1.0.2 |
+| 13/03/23 | Edit  | 1.0.1 |
+| 06/12/22| First Release | 1.0.0 |
 
 ## Table of Contents
 
@@ -48,8 +48,8 @@
 
 ## References
 
-- `HDMI-CEC Specification` - High-Definition Multimedia Interface, Specification Version 1.3a, [https://www.hdmi.org/]
-  - (Downloadable via)[https://www.hdmi.org/requestform/clickrequestasync?docId=16]
+- `HDMI-CEC Specification` - High-Definition Multimedia Interface, Specification Version 1.3a, (https://www.hdmi.org/)
+  - Downloadable via [this link](https://www.hdmi.org/requestform/clickrequestasync?docId=16)
   - refer to Supplement 1 - Consumer Electronics Control (CEC) 
 
 ## Description
@@ -135,10 +135,11 @@ This interface is required to not cause excessive memory and CPU utilization.
 ### Quality Control
 
 - This interface is required to perform static analysis, our preferred tool is Coverity.
-- Open-source copyright validation is required to be performed, e.g.: Black duck, FossID.
-- Have a zero-warning policy with regards to compiling. All warnings are required to be treated as errors.
+- Have a zero-warning policy with regards to compiling. All warnings are required to be treated as error.
+- Copyright validation is required to be performed, e.g.: Black duck, FossID.
 - Use of memory analysis tools like Valgrind are encouraged, to identify leaks/corruptions.
-- Tests will endeavour to create worst case scenarios to assist investigations.
+- `HAL` Tests will endeavour to create worst case scenarios to assist investigations.
+- Improvements by any party to the testing suite are required to be fed back.
 
 ### Licensing
 
@@ -185,13 +186,17 @@ NOTE: The module would operate deterministically if the above call sequence is f
 ```mermaid
 %%{ init : { "theme" : "default", "flowchart" : { "curve" : "stepBefore" }}}%%
    sequenceDiagram
+    participant Caller as Caller
     participant HAL as HDMI CEC HAL
     Caller->>HAL:HdmiCecOpen()
-    Note over HAL: SOC intialises and discovers <br> physical and logical address internally <br> based on device type and connection topology
+    Note over HAL: SOC intialises and discovers <br> physical address based on the connection topology <br> source devices discovers logical address internally  based on device type.
     HAL-->>Caller:return
     Caller->>HAL:HdmiCecSetRxCallback()
     HAL-->>Caller:return
     Caller->>HAL:HdmiCecSetTxCallback()
+    HAL-->>Caller:return
+    Caller ->>HAL:HdmiCecAddLogicalAddress()
+    Note over Caller: Sink devices should set the logical address using the API <br> HdmiCecAddLogicalAddress (Only for sink devices)
     HAL-->>Caller:return
     Caller ->>HAL:HdmiCecGetLogicalAddress()
     HAL-->>Caller:return
