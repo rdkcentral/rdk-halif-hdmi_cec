@@ -1,5 +1,3 @@
-@mainpage
-
 # HDMI CEC HAL Documentation
 
 ## Version History
