@@ -64,7 +64,7 @@ enum HDMI_CEC_IO_ERROR
     HDMI_CEC_IO_INVALID_STATE,              ///< Module is not intialised
     HDMI_CEC_IO_INVALID_ARGUMENT,           ///< Invalid argument is passed to the module
     HDMI_CEC_IO_LOGICALADDRESS_UNAVAILABLE, ///< Logical address is not available
-    HDMI_CEC_IO_GENERAL_ERROR,              ///< Operation general error //@todo need to remove it in the next phase. Need to replace with proper error codes.
+    HDMI_CEC_IO_GENERAL_ERROR,              ///< Operation general error
     HDMI_CEC_IO_MAX                         ///< Out of range - required to be the 
                                             ///< last item of the enum
 };
@@ -109,13 +109,10 @@ typedef void (*HdmiCecTxCallback_t)(int handle, void *callbackData, int result);
  * 
  * @note For sink devices logical address discovery will not happen in HdmiCecOpen()
  * 
- * @todo in all open/init scenarios. Change the HDMI_CEC_IO_INVALID_STATE 
- *   to HDMI_CEC_IO_ALREADY_OPEN. Will do it in the next phase
  * @warning This API is NOT thread safe.
  *
  * @see HdmiCecClose()
  *
- * @todo: Change the return type to HDMI_CEC_IO_ERROR instead of int
  */
 int HdmiCecOpen(int *handle);
 
@@ -136,8 +133,6 @@ int HdmiCecOpen(int *handle);
  *
  * @pre HdmiCecOpen() must be called before calling this API.
  * @warning This API is NOT thread safe.
- * @todo in all open/init scenarios. Change the HDMI_CEC_IO_INVALID_STATE 
- *   to HDMI_CEC_IO_NOT_OPENED. Will do it in the next phase
  *
  * @see HdmiCecOpen()
  *
@@ -175,8 +170,6 @@ int HdmiCecClose(int handle);
  * @pre HdmiCecOpen() must be called before calling this API.
  * @warning This API is NOT thread safe.
  * @note This API is not required if the SOC is performing the logical address discovery.
- *  @todo in all open/init scenarios. Change the HDMI_CEC_IO_INVALID_STATE 
- *   to HDMI_CEC_IO_NOT_OPENED. Will do it in the next phase
  * 
  * @see HdmiCecRemoveLogicalAddress(), HdmiCecGetLogicalAddress()
  * 
@@ -193,8 +186,6 @@ int HdmiCecAddLogicalAddress(int handle, int logicalAddresses);
  * This API is only applicable for sink devices. Invoking this API in source 
  *  device must return HDMI_CEC_IO_INVALID_ARGUMENT@n@n
  * 
- * @todo if we try to remove it again. Should throw an error. It should return invalid argument. 
- *       It will be done in next phase.
  *
  * @param[in] handle                   - The handle returned from the HdmiCecOpen() function. Non zero value
  * @param[in] logicalAddresses         - The logicalAddresses to be released
@@ -209,8 +200,6 @@ int HdmiCecAddLogicalAddress(int handle, int logicalAddresses);
  * @warning This API is NOT thread safe.
  * @note This API is not required if the SOC is performing the logical address discovery.
  * @see HdmiCecAddLogicalAddress(), HdmiCecGetLogicalAddress()
- *  @todo in all open/init scenarios. Change the HDMI_CEC_IO_INVALID_STATE 
- *   to HDMI_CEC_IO_NOT_OPENED. Will do it in the next phase
  * 
  */
 int HdmiCecRemoveLogicalAddress(int handle, int logicalAddresses);
@@ -237,8 +226,6 @@ int HdmiCecRemoveLogicalAddress(int handle, int logicalAddresses);
  * @warning This API is NOT thread safe.
  * @note This API is not required if the SOC is performing the logical address discovery.
  * @see HdmiCecAddLogicalAddress(), HdmiCecRemoveLogicalAddress()
- *  @todo in all open/init scenarios. Change the HDMI_CEC_IO_INVALID_STATE 
- *   to HDMI_CEC_IO_NOT_OPENED. Will do it in the next phase
  * 
  */
 int HdmiCecGetLogicalAddress(int handle,  int *logicalAddress);
@@ -255,9 +242,6 @@ int HdmiCecGetLogicalAddress(int handle,  int *logicalAddress);
  * @warning This API is NOT thread safe.
  * @see HdmiCecGetLogicalAddress()
  *
- * @todo: Need to return HDMI_CEC_IO_ERROR for HdmiCecOpen() failure
- *  @todo in all open/init scenarios. Change the HDMI_CEC_IO_INVALID_STATE 
- *   to HDMI_CEC_IO_NOT_OPENED. Will do it in the next phase
  */
 void HdmiCecGetPhysicalAddress(int handle, unsigned int *physicalAddress);
 
@@ -306,8 +290,6 @@ void HdmiCecGetPhysicalAddress(int handle, unsigned int *physicalAddress);
  * @pre HdmiCecOpen() must be called before calling this API.
  * @warning This API is NOT thread safe.
  * @see HdmiCecTx(), HdmiCecTxAsync(), HdmiCecSetTxCallback()
- *  @todo in all open/init scenarios. Change the HDMI_CEC_IO_INVALID_STATE 
- *   to HDMI_CEC_IO_NOT_OPENED. Will do it in the next phase
  * 
  */
 int HdmiCecSetRxCallback(int handle, HdmiCecRxCallback_t cbfunc, void *data);
@@ -334,8 +316,6 @@ int HdmiCecSetRxCallback(int handle, HdmiCecRxCallback_t cbfunc, void *data);
  * @pre HdmiCecOpen() must be called before calling this API.
  * @warning This API is NOT thread safe.
  * @see HdmiCecTx(), HdmiCecTxAsync()
- *  @todo in all open/init scenarios. Change the HDMI_CEC_IO_INVALID_STATE 
- *   to HDMI_CEC_IO_NOT_OPENED. Will do it in the next phase
  * 
  */
 int HdmiCecSetTxCallback(int handle, HdmiCecTxCallback_t cbfunc, void *data);
@@ -348,7 +328,6 @@ int HdmiCecSetTxCallback(int handle, HdmiCecTxCallback_t cbfunc, void *data);
  * The packet contained in the buffer will follow the format detailed in HdmiCecSetRxCallback_t().
  * (ref <HDMI Specification 1-4> Section <CEC 6.1>)
  *
- * @todo add  Non zero value to all comments for handle.
  *
  * @param[in] handle                              - The handle returned from the 
  *                                                    HdmiCecOpen() function. Non zero value
@@ -373,10 +352,6 @@ int HdmiCecSetTxCallback(int handle, HdmiCecTxCallback_t cbfunc, void *data);
  * @pre  HdmiCecOpen(), HdmiCecSetRxCallback() should be called before calling this API.
  * @warning  This API is Not thread safe.
  * @see HdmiCecTxAsync(), HdmiCecSetRxCallback()
- * @todo: Need to check the why result argument is required.
- * @todo: SKY will come back one if HDMI_CEC_IO_LOGICALADDRESS_UNAVAILABLE return type is required for this function.
- *  @todo in all open/init scenarios. Change the HDMI_CEC_IO_INVALID_STATE 
- *   to HDMI_CEC_IO_NOT_OPENED. Will do it in the next phase
  * 
  */
 int HdmiCecTx(int handle, const unsigned char *buf, int len, int *result);
@@ -403,8 +378,6 @@ int HdmiCecTx(int handle, const unsigned char *buf, int len, int *result);
  * @pre  HdmiCecOpen(), HdmiCecSetRxCallback(), HdmiCecSetTxCallback()  should be called before calling this API.
  * @warning  This API is Not thread safe.
  * @see HdmiCecTx(), HdmiCecSetRxCallback()
- *  @todo in all open/init scenarios. Change the HDMI_CEC_IO_INVALID_STATE 
- *   to HDMI_CEC_IO_NOT_OPENED. Will do it in the next phase
  * 
  */
 int HdmiCecTxAsync(int handle, const unsigned char *buf, int len);
