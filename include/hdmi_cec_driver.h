@@ -225,7 +225,6 @@ int HdmiCecRemoveLogicalAddress(int handle, int logicalAddresses);
  *     excluding both the values.
  *
  * @param[in] handle                    - The handle returned from the HdmiCecOpen() function. Non zero value
- * @param[in] devType                   - The device type (tuner, record, playback etc.)
  * @param[out] logicalAddress           - The logical address acquired
  *
  * @return HDMI_CEC_IO_ERROR            - Status
@@ -238,12 +237,11 @@ int HdmiCecRemoveLogicalAddress(int handle, int logicalAddresses);
  * @warning This API is NOT thread safe.
  * @note This API is not required if the SOC is performing the logical address discovery.
  * @see HdmiCecAddLogicalAddress(), HdmiCecRemoveLogicalAddress()
- * @todo: Unused variable devType. Need to remove.
  *  @todo in all open/init scenarios. Change the HDMI_CEC_IO_INVALID_STATE 
  *   to HDMI_CEC_IO_NOT_OPENED. Will do it in the next phase
  * 
  */
-int HdmiCecGetLogicalAddress(int handle, int devType,  int *logicalAddress);
+int HdmiCecGetLogicalAddress(int handle,  int *logicalAddress);
 
 /**
  * @brief Gets the Physical Address obtained by the module.
