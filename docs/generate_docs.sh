@@ -17,6 +17,7 @@
 # * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 # * See the License for the specific language governing permissions and
 # * limitations under the License.
+# *
 
 # PLEASE RUN THIS SCRIPT FROM INSIDE THE docs/ DIR SO THAT RELATIVE PATHS SET IN Doxyfile.cfg WORK AS EXPECTED
 
@@ -25,14 +26,13 @@ HAL_GENERATOR_VERSION=master
 
 # This will look up the last tag in the git repo, depending on the project this may require modification
 PROJECT_VERSION=$(git describe --tags | head -n1)
-DOXYGEN_REPO=$(git remote -vv | head -n1 | awk -F ' ' '{print $2}' | sed 's/hal.*/hal-doxygen.git/g')
 
 # Check if the common document configuration is present, if not clone it
 if [ -d "./build" ]; then
-    make -C ./build PROJECT_NAME="HDMI CEC HAL" PROJECT_VERSION=${PROJECT_VERSION}
+    make -C ./build PROJECT_NAME="RDK-B Wifi HAL" PROJECT_VERSION=${PROJECT_VERSION}
 else
     echo "Cloning Common documentation generation"
-    git clone $DOXYGEN_REPO build
+    git clone git@github.com:rdkcentral/hal-doxygen.git build
     cd ./build
     git checkout ${HAL_GENERATOR_VERSION}
     cd ..
