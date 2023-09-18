@@ -119,7 +119,6 @@ typedef void (*HdmiCecTxCallback_t)(int handle, void *callbackData, int result);
  *
  * @see HdmiCecClose()
  *
- * @todo: Change the return type to HDMI_CEC_IO_ERROR instead of int
  */
 HDMI_CEC_STATUS HdmiCecOpen(int *handle);
 
@@ -191,8 +190,6 @@ HDMI_CEC_STATUS HdmiCecAddLogicalAddress(int handle, int logicalAddresses);
  * This API is only applicable for sink devices. Invoking this API in source 
  *  device must return HDMI_CEC_IO_INVALID_ARGUMENT@n@n
  * 
- * @todo if we try to remove it again. Should throw an error. It should return invalid argument. 
- *       It will be done in next phase.
  *
  * @param[in] handle                   - The handle returned from the HdmiCecOpen() function. Non zero value
  * @param[in] logicalAddresses         - The logicalAddresses to be released
@@ -206,8 +203,6 @@ HDMI_CEC_STATUS HdmiCecAddLogicalAddress(int handle, int logicalAddresses);
  * @warning This API is NOT thread safe.
  * @note This API is not required if the SOC is performing the logical address discovery.
  * @see HdmiCecAddLogicalAddress(), HdmiCecGetLogicalAddress()
- *  @todo in all open/init scenarios. Change the HDMI_CEC_IO_INVALID_STATE 
- *   to HDMI_CEC_IO_NOT_OPENED. Will do it in the next phase
  * 
  */
 HDMI_CEC_STATUS HdmiCecRemoveLogicalAddress(int handle, int logicalAddresses);
@@ -237,6 +232,7 @@ HDMI_CEC_STATUS HdmiCecRemoveLogicalAddress(int handle, int logicalAddresses);
  * 
  */
 HDMI_CEC_STATUS HdmiCecGetLogicalAddress(int handle, int *logicalAddress);
+
 
 /**
  * @brief Gets the Physical Address obtained by the module.
@@ -345,7 +341,6 @@ HDMI_CEC_STATUS HdmiCecSetTxCallback(int handle, HdmiCecTxCallback_t cbfunc, voi
  * The packet contained in the buffer will follow the format detailed in HdmiCecSetRxCallback_t().
  * (ref <HDMI Specification 1-4> Section <CEC 6.1>)
  *
- * @todo add  Non zero value to all comments for handle.
  *
  * @param[in] handle                              - The handle returned from the 
  *                                                    HdmiCecOpen() function. Non zero value
