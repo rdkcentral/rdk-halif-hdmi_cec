@@ -60,7 +60,7 @@ extern "C" {
  * @todo add one more enum HDMI_CEC_IO_ALREADY_REMOVED Anooj will handle it.
  * 
  */
-enum HDMI_CEC_IO_ERROR
+typedef enum HDMI_CEC_IO_ERROR
 {
     HDMI_CEC_IO_SUCCESS = 0,                ///< Input output operation is successful
     HDMI_CEC_IO_SENT_AND_ACKD = 1,          ///< Send and acknowledgement received
@@ -72,6 +72,7 @@ enum HDMI_CEC_IO_ERROR
     HDMI_CEC_IO_GENERAL_ERROR,              ///< Operation general error. //@todo need to remove it in the next phase. Need to replace with proper error codes.
     HDMI_CEC_IO_ALREADY_OPEN,               ///< Module is already initialised
     HDMI_CEC_IO_ALREADY_REMOVED,            ///< Already removed operation error
+    HDMI_CEC_IO_INVALID_OUTPUT,             ///< Invalid output from HAL
     HDMI_CEC_IO_MAX                         ///< Out of range - required to be the 
                                             ///< last item of the enum
 } HDMI_CEC_STATUS;
@@ -241,6 +242,9 @@ HDMI_CEC_STATUS HdmiCecGetLogicalAddress(int handle, int *logicalAddress);
  *
  * @param[in] handle            - Returned from the HdmiCecOpen() function
  * @param[out] physicalAddress  - Physical address acquired
+ *    Max value for physicalAddress is (((0x04 &0xF0 ) << 20)|( (0x04 &0x0F ) << 16) |((0x04 & 0xF0) << 4)  | (0x04 & 0x0F))
+ *    Since max possible physical address is 4.4.4.4
+ *    Min value for physicalAddress is 0
  * 
  * @pre HdmiCecOpen() must be called before calling this API.
  * @warning This API is NOT thread safe.
@@ -250,6 +254,7 @@ HDMI_CEC_STATUS HdmiCecGetLogicalAddress(int handle, int *logicalAddress);
  * @retval HDMI_CEC_IO_SUCCESS          - Success
  * @retval HDMI_CEC_IO_NOT_OPENED       - Module is not initialised
  * @retval HDMI_CEC_IO_INVALID_ARGUMENT - Parameter passed to this function is invalid
+ * @retval HDMI_CEC_IO_INVALID_OUTPUT   - Invalid output from HAL
  * 
  * @todo need to check what is the boundary conditions for physical address. Max hdmi ports is 4 its seems. Anooj will address it. 
  * 
