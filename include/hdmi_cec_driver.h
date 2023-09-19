@@ -55,9 +55,7 @@ extern "C" {
 /**
  * Error Codes
  * 
- * @todo need to rename HDMI_CEC_IO_ERROR to HDMI_CEC_STATUS Anooj will take care. 
  * @todo need to rename the enum names also will do it in the next phase.
- * @todo add one more enum HDMI_CEC_IO_ALREADY_REMOVED Anooj will handle it.
  * 
  */
 typedef enum HDMI_CEC_IO_ERROR
@@ -73,6 +71,7 @@ typedef enum HDMI_CEC_IO_ERROR
     HDMI_CEC_IO_ALREADY_OPEN,               ///< Module is already initialised
     HDMI_CEC_IO_ALREADY_REMOVED,            ///< Already removed operation error
     HDMI_CEC_IO_INVALID_OUTPUT,             ///< Invalid output from HAL
+    HDMI_CEC_IO_INVALID_HANDLE,             ///< An invalid handle argument has been passed
     HDMI_CEC_IO_MAX                         ///< Out of range - required to be the 
                                             ///< last item of the enum
 } HDMI_CEC_STATUS;
@@ -107,7 +106,7 @@ typedef void (*HdmiCecTxCallback_t)(int handle, void *callbackData, int result);
  * @param [out] handle                    - The handle used by application to uniquely 
  *                                          identify the HAL instance
  *
- * @return HDMI_CEC_IO_ERROR                      - Status
+ * @return HDMI_CEC_STATUS                        - Status
  * @retval HDMI_CEC_IO_SUCCESS                    - Success
  * @retval HDMI_CEC_IO_ALREADY_OPEN               - Function is already open. 
  *                                                  This error code will deprecated in the next phase.
@@ -132,10 +131,10 @@ HDMI_CEC_STATUS HdmiCecOpen(int *handle);
  *
  * @param[in] handle - The handle returned from the HdmiCecOpen() function. Non zero value
  *
- * @return HDMI_CEC_IO_ERROR            - Status
+ * @return HDMI_CEC_STATUS              - Status
  * @retval HDMI_CEC_IO_SUCCESS          - Success
  * @retval HDMI_CEC_IO_NOT_OPENED       - Module is not initialised
- * @retval HDMI_CEC_IO_INVALID_ARGUMENT - Parameter passed to this function is invalid
+ * @retval HDMI_CEC_IO_INVALID_HANDLE   - An invalid handle argument has been passed
  *
  * @pre HdmiCecOpen() must be called before calling this API.
  * @warning This API is NOT thread safe.
@@ -163,11 +162,12 @@ HDMI_CEC_STATUS HdmiCecClose(int handle);
  *                                                    function. Non zero value
  * @param[in] logicalAddresses                    - The logical address to be acquired
  *
- * @return HDMI_CEC_IO_ERROR                      - Status
+ * @return HDMI_CEC_STATUS                        - Status
  * @retval HDMI_CEC_IO_SUCCESS                    - POLL message is sent successfully and not 
  *                                                    ACK'd by any device on the bus
  * @retval HDMI_CEC_IO_NOT_OPENED                 - Module is not initialised
  * @retval HDMI_CEC_IO_INVALID_ARGUMENT           - Parameter passed to this function is invalid
+ * @retval HDMI_CEC_IO_INVALID_HANDLE   - An invalid handle argument has been passed
  * @retval HDMI_CEC_IO_LOGICALADDRESS_UNAVAILABLE - POLL message is sent and 
  *                                                     ACK'd by a device on the bus
  * @retval HDMI_CEC_IO_SENT_FAILED                - POLL message send failed.
@@ -195,10 +195,11 @@ HDMI_CEC_STATUS HdmiCecAddLogicalAddress(int handle, int logicalAddresses);
  * @param[in] handle                   - The handle returned from the HdmiCecOpen() function. Non zero value
  * @param[in] logicalAddresses         - The logicalAddresses to be released
  *
- * @return HDMI_CEC_IO_ERROR            - Status
+ * @return HDMI_CEC_STATUS              - Status
  * @retval HDMI_CEC_IO_SUCCESS          - Success
  * @retval HDMI_CEC_IO_NOT_OPENED       - Module is not initialised
  * @retval HDMI_CEC_IO_INVALID_ARGUMENT - Parameter passed to this function is invalid
+ * @retval HDMI_CEC_IO_INVALID_HANDLE   - An invalid handle argument has been passed
  *
  * @pre HdmiCecOpen() must be called before calling this API.
  * @warning This API is NOT thread safe.
@@ -220,10 +221,11 @@ HDMI_CEC_STATUS HdmiCecRemoveLogicalAddress(int handle, int logicalAddresses);
  * @param[in] handle                    - The handle returned from the HdmiCecOpen() function. Non zero value
  * @param[out] logicalAddress           - The logical address acquired
  *
- * @return HDMI_CEC_IO_ERROR            - Status
+ * @return HDMI_CEC_STATUS              - Status
  * @retval HDMI_CEC_IO_SUCCESS          - Success
- * @retval  HDMI_CEC_IO_NOT_OPENED      - Module is not initialised
+ * @retval HDMI_CEC_IO_NOT_OPENED       - Module is not initialised
  * @retval HDMI_CEC_IO_INVALID_ARGUMENT - Parameter passed to this function is invalid
+ * @retval HDMI_CEC_IO_INVALID_HANDLE   - An invalid handle argument has been passed
  *
  * @pre HdmiCecOpen() must be called before calling this API.
  * @warning This API is NOT thread safe.
@@ -250,15 +252,12 @@ HDMI_CEC_STATUS HdmiCecGetLogicalAddress(int handle, int *logicalAddress);
  * @warning This API is NOT thread safe.
  * @see HdmiCecGetLogicalAddress()
  *
- * @return HDMI_CEC_IO_ERROR            - Status
+ * @return HDMI_CEC_STATUS              - Status
  * @retval HDMI_CEC_IO_SUCCESS          - Success
  * @retval HDMI_CEC_IO_NOT_OPENED       - Module is not initialised
  * @retval HDMI_CEC_IO_INVALID_ARGUMENT - Parameter passed to this function is invalid
+ * @retval HDMI_CEC_IO_INVALID_HANDLE   - An invalid handle argument has been passed
  * @retval HDMI_CEC_IO_INVALID_OUTPUT   - Invalid output from HAL
- * 
- * @todo need to check what is the boundary conditions for physical address. Max hdmi ports is 4 its seems. Anooj will address it. 
- * 
- * @todo: Need to return HDMI_CEC_IO_ERROR for HdmiCecOpen() failure
  * 
  */
 HDMI_CEC_STATUS HdmiCecGetPhysicalAddress(int handle, unsigned int *physicalAddress);
@@ -285,7 +284,7 @@ HDMI_CEC_STATUS HdmiCecGetPhysicalAddress(int handle, unsigned int *physicalAddr
  * |------------------------------------------------
  * @endcode
  *
- * When receiving, the returned buffer should not contain EOM and ACK bits.@n
+ * When receiving, the returned buffer should not contain EOM and ACK bits. HAL internal logic.@n
  * 
  * When transmitting, it is HAL's responsibility to insert EOM bit and ACK bit 
  * for each header or data block.
@@ -300,10 +299,10 @@ HDMI_CEC_STATUS HdmiCecGetPhysicalAddress(int handle, unsigned int *physicalAddr
  *                                          when a complete packet is received
  * @param[in] data                      - Callback data
  *
- * @return HDMI_CEC_IO_ERROR            - Status
+ * @return HDMI_CEC_STATUS              - Status
  * @retval HDMI_CEC_IO_SUCCESS          - Success
  * @retval HDMI_CEC_IO_NOT_OPENED       - Module is not initialised
- * @retval HDMI_CEC_IO_INVALID_ARGUMENT - Parameter passed to this function is invalid
+ * @retval HDMI_CEC_IO_INVALID_HANDLE   - An invalid handle argument has been passed
  *
  * @pre HdmiCecOpen() must be called before calling this API.
  * @warning This API is NOT thread safe.
@@ -325,11 +324,11 @@ HDMI_CEC_STATUS HdmiCecSetRxCallback(int handle, HdmiCecRxCallback_t cbfunc, voi
  * @param[in] cbfunc                    - Function pointer to be invoked 
  *                                          when a complete packet is transmitted
  * @param[in] data                      - Callback data
- *
- * @return HDMI_CEC_IO_ERROR            - Status
+ * 
+ * @return HDMI_CEC_STATUS              - Status
  * @retval HDMI_CEC_IO_SUCCESS          - Success
  * @retval HDMI_CEC_IO_NOT_OPENED       - Module is not initialised
- * @retval HDMI_CEC_IO_INVALID_ARGUMENT - Parameter passed to this function is invalid
+ * @retval HDMI_CEC_IO_INVALID_HANDLE   - An invalid handle argument has been passed
  *
  * @pre HdmiCecOpen() must be called before calling this API.
  * @warning This API is NOT thread safe.
@@ -357,20 +356,21 @@ HDMI_CEC_STATUS HdmiCecSetTxCallback(int handle, HdmiCecTxCallback_t cbfunc, voi
  *                    SENT_BUT_NOT_ACKD (e.g. no follower at the destination),
  *                    SENT_FAILED (e.g. collision).
  *
- * @return HDMI_CEC_IO_ERROR                      - Status
+ * @return HDMI_CEC_STATUS                        - Status
  * @retval HDMI_CEC_IO_SUCCESS                    - Success
  * @retval HDMI_CEC_IO_NOT_OPENED                 - Module is not initialised
  * @retval HDMI_CEC_IO_INVALID_ARGUMENT           - Parameter passed to this function is invalid
+ * @retval HDMI_CEC_IO_INVALID_HANDLE             - An invalid handle argument has been passed
  * @retval HDMI_CEC_IO_SENT_AND_ACKD              - Cec message is send and acknowledged.
  * @retval HDMI_CEC_IO_SENT_BUT_NOT_ACKD          - Message send but not acknowledged 
- *                                                    by the receiver.
+ *                                                    by the receiver. host device is trying to 
+ *                                                    sent the invalid logical address
  * @retval HDMI_CEC_IO_SENT_FAILED                - send message failed.
  *
  * @pre  HdmiCecOpen(), HdmiCecSetRxCallback() should be called before calling this API.
  * @warning  This API is Not thread safe.
  * @see HdmiCecTxAsync(), HdmiCecSetRxCallback()
  * @todo: Need to check the why result argument is required.
- * @todo: SKY will come back one if HDMI_CEC_IO_LOGICALADDRESS_UNAVAILABLE return type is required for this function.
  * 
  */
 HDMI_CEC_STATUS HdmiCecTx(int handle, const unsigned char *buf, int len, int *result);
@@ -388,10 +388,11 @@ HDMI_CEC_STATUS HdmiCecTx(int handle, const unsigned char *buf, int len, int *re
  *                                                    CEC packet to send
  * @param[in] len                                 - Number of bytes in the packet
  *
- * @return HDMI_CEC_IO_ERROR                      - Status
+ * @return HDMI_CEC_STATUS                        - Status
  * @retval HDMI_CEC_IO_SUCCESS                    - Success
  * @retval HDMI_CEC_IO_NOT_OPENED                 - Module is not initialised
  * @retval HDMI_CEC_IO_INVALID_ARGUMENT           - Parameter passed to this function is invalid
+ * @retval HDMI_CEC_IO_INVALID_HANDLE             - An invalid handle argument has been passed
  *
  * @pre  HdmiCecOpen(), HdmiCecSetRxCallback(), HdmiCecSetTxCallback()  should be called before calling this API.
  * @warning  This API is Not thread safe.
