@@ -69,9 +69,10 @@ typedef enum HDMI_CEC_IO_ERROR
     HDMI_CEC_IO_LOGICALADDRESS_UNAVAILABLE, ///< Logical address is not available
     HDMI_CEC_IO_GENERAL_ERROR,              ///< Operation general error. //@todo need to remove it in the next phase. Need to replace with proper error codes.
     HDMI_CEC_IO_ALREADY_OPEN,               ///< Module is already initialised
-    HDMI_CEC_IO_ALREADY_REMOVED,            ///< Already removed operation error
-    HDMI_CEC_IO_INVALID_OUTPUT,             ///< Invalid output from HAL
+    HDMI_CEC_IO_ALREADY_REMOVED,            ///< Removal operation is already executed
+    HDMI_CEC_IO_INVALID_OUTPUT,             ///< Output arguments fall outside the valid range
     HDMI_CEC_IO_INVALID_HANDLE,             ///< An invalid handle argument has been passed
+    HDMI_CEC_IO_OPERATION_NOT_SUPPORTED,    ///< Operation not supported
     HDMI_CEC_IO_MAX                         ///< Out of range - required to be the 
                                             ///< last item of the enum
 } HDMI_CEC_STATUS;
@@ -167,18 +168,19 @@ HDMI_CEC_STATUS HdmiCecClose(int handle);
  *                                                    ACK'd by any device on the bus
  * @retval HDMI_CEC_IO_NOT_OPENED                 - Module is not initialised
  * @retval HDMI_CEC_IO_INVALID_ARGUMENT           - Parameter passed to this function is invalid
- * @retval HDMI_CEC_IO_INVALID_HANDLE   - An invalid handle argument has been passed
+ *                                                  should be if any logical address other than 0x0 is given as argument
+ * @retval HDMI_CEC_IO_INVALID_HANDLE             - An invalid handle argument has been passed
  * @retval HDMI_CEC_IO_LOGICALADDRESS_UNAVAILABLE - POLL message is sent and 
  *                                                     ACK'd by a device on the bus
  * @retval HDMI_CEC_IO_SENT_FAILED                - POLL message send failed.
  *
  * @pre HdmiCecOpen() must be called before calling this API.
  * @warning This API is NOT thread safe.
- * @note This API is not required if the SOC is performing the logical address discovery.
  * 
  * @see HdmiCecRemoveLogicalAddress(), HdmiCecGetLogicalAddress()
- * @todo need to remove the API in next phase
- */
+ * @todo need to remove the API in next phase 
+ * @note This API is not required if the SOC is performing the logical address discovery.
+ * 
 HDMI_CEC_STATUS HdmiCecAddLogicalAddress(int handle, int logicalAddresses);
 
 /**
@@ -199,6 +201,9 @@ HDMI_CEC_STATUS HdmiCecAddLogicalAddress(int handle, int logicalAddresses);
  * @retval HDMI_CEC_IO_SUCCESS          - Success
  * @retval HDMI_CEC_IO_NOT_OPENED       - Module is not initialised
  * @retval HDMI_CEC_IO_INVALID_ARGUMENT - Parameter passed to this function is invalid
+ *                                        should be if any logical address other than 0x0 is given as argument
+ * @retval HDMI_CEC_IO_ALREADY_REMOVED  - Removal operation is already executed
+ *                                        0x0 was previously successfully removed and now trying to remove it again
  * @retval HDMI_CEC_IO_INVALID_HANDLE   - An invalid handle argument has been passed
  *
  * @pre HdmiCecOpen() must be called before calling this API.
@@ -244,8 +249,7 @@ HDMI_CEC_STATUS HdmiCecGetLogicalAddress(int handle, int *logicalAddress);
  *
  * @param[in] handle            - Returned from the HdmiCecOpen() function
  * @param[out] physicalAddress  - Physical address acquired
- *    Max value for physicalAddress is (((0x04 &0xF0 ) << 20)|( (0x04 &0x0F ) << 16) |((0x04 & 0xF0) << 4)  | (0x04 & 0x0F))
- *    Since max possible physical address is 4.4.4.4
+ *    Max possible physical address is 4.4.4.4 and respective integer value is  (((0x04 &0xF0 ) << 20)|( (0x04 &0x0F ) << 16) |((0x04 & 0xF0) << 4)  | (0x04 & 0x0F))
  *    Min value for physicalAddress is 0
  * 
  * @pre HdmiCecOpen() must be called before calling this API.
@@ -285,6 +289,7 @@ HDMI_CEC_STATUS HdmiCecGetPhysicalAddress(int handle, unsigned int *physicalAddr
  * @endcode
  *
  * When receiving, the returned buffer should not contain EOM and ACK bits. HAL internal logic.@n
+ * HAL implementation should remove the EOM and ACK bits in the returned buffer
  * 
  * When transmitting, it is HAL's responsibility to insert EOM bit and ACK bit 
  * for each header or data block.
@@ -365,12 +370,15 @@ HDMI_CEC_STATUS HdmiCecSetTxCallback(int handle, HdmiCecTxCallback_t cbfunc, voi
  * @retval HDMI_CEC_IO_SENT_BUT_NOT_ACKD          - Message send but not acknowledged 
  *                                                    by the receiver. host device is trying to 
  *                                                    sent the invalid logical address
+ *                                                  This means that the host device is trying to 
+ *                                                    send to an invalid logical address
  * @retval HDMI_CEC_IO_SENT_FAILED                - send message failed.
  *
  * @pre  HdmiCecOpen(), HdmiCecSetRxCallback() should be called before calling this API.
  * @warning  This API is Not thread safe.
  * @see HdmiCecTxAsync(), HdmiCecSetRxCallback()
- * @todo: Need to check the why result argument is required.
+ * @todo Need to check why result argument is required as HDMI_CEC_STATUS already has 
+ * similar return types for the same states as in result argument and deprecate the result argument if they are the same in next phase
  * 
  */
 HDMI_CEC_STATUS HdmiCecTx(int handle, const unsigned char *buf, int len, int *result);
