@@ -178,9 +178,9 @@ HDMI_CEC_STATUS HdmiCecClose(int handle);
  * @warning This API is NOT thread safe.
  * 
  * @see HdmiCecRemoveLogicalAddress(), HdmiCecGetLogicalAddress()
- * @todo need to remove the API in next phase 
+ * @todo need to remove the API in next phase : since This API is not required if the SOC is performing the logical address discovery.
  * @note This API is not required if the SOC is performing the logical address discovery.
- * 
+ */ 
 HDMI_CEC_STATUS HdmiCecAddLogicalAddress(int handle, int logicalAddresses);
 
 /**
@@ -261,7 +261,7 @@ HDMI_CEC_STATUS HdmiCecGetLogicalAddress(int handle, int *logicalAddress);
  * @retval HDMI_CEC_IO_NOT_OPENED       - Module is not initialised
  * @retval HDMI_CEC_IO_INVALID_ARGUMENT - Parameter passed to this function is invalid
  * @retval HDMI_CEC_IO_INVALID_HANDLE   - An invalid handle argument has been passed
- * @retval HDMI_CEC_IO_INVALID_OUTPUT   - Invalid output from HAL
+ * @retval HDMI_CEC_IO_INVALID_OUTPUT   - Physical address can't be retrieved which is outside the valid range
  * 
  */
 HDMI_CEC_STATUS HdmiCecGetPhysicalAddress(int handle, unsigned int *physicalAddress);
