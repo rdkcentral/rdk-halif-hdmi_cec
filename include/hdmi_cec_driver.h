@@ -173,6 +173,7 @@ HDMI_CEC_STATUS HdmiCecClose(int handle);
  * @retval HDMI_CEC_IO_LOGICALADDRESS_UNAVAILABLE - POLL message is sent and 
  *                                                     ACK'd by a device on the bus
  * @retval HDMI_CEC_IO_SENT_FAILED                - POLL message send failed.
+ * @retval HDMI_CEC_IO_OPERATION_NOT_SUPPORTED    - Operation not supported
  *
  * @pre HdmiCecOpen() must be called before calling this API.
  * @warning This API is NOT thread safe.
@@ -197,14 +198,15 @@ HDMI_CEC_STATUS HdmiCecAddLogicalAddress(int handle, int logicalAddresses);
  * @param[in] handle                   - The handle returned from the HdmiCecOpen() function. Non zero value
  * @param[in] logicalAddresses         - The logicalAddresses to be released
  *
- * @return HDMI_CEC_STATUS              - Status
- * @retval HDMI_CEC_IO_SUCCESS          - Success
- * @retval HDMI_CEC_IO_NOT_OPENED       - Module is not initialised
- * @retval HDMI_CEC_IO_INVALID_ARGUMENT - Parameter passed to this function is invalid
- *                                        should be if any logical address other than 0x0 is given as argument
- * @retval HDMI_CEC_IO_ALREADY_REMOVED  - Removal operation is already executed
- *                                        0x0 was previously successfully removed and now trying to remove it again
- * @retval HDMI_CEC_IO_INVALID_HANDLE   - An invalid handle argument has been passed
+ * @return HDMI_CEC_STATUS                        - Status
+ * @retval HDMI_CEC_IO_SUCCESS                    - Success
+ * @retval HDMI_CEC_IO_NOT_OPENED                 - Module is not initialised
+ * @retval HDMI_CEC_IO_INVALID_ARGUMENT           - Parameter passed to this function is invalid
+ *                                                   should be if any logical address other than 0x0 is given as argument
+ * @retval HDMI_CEC_IO_ALREADY_REMOVED            - Removal operation is already executed
+ *                                                    0x0 was previously successfully removed and now trying to remove it again
+ * @retval HDMI_CEC_IO_INVALID_HANDLE             - An invalid handle argument has been passed
+ * @retval HDMI_CEC_IO_OPERATION_NOT_SUPPORTED    - Operation not supported
  *
  * @pre HdmiCecOpen() must be called before calling this API.
  * @warning This API is NOT thread safe.
