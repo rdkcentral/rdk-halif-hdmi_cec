@@ -186,7 +186,7 @@ HDMI_CEC_STATUS HdmiCecClose(int handle);
  *                                                    ACK'd by any device on the bus
  * @retval HDMI_CEC_IO_NOT_OPENED                 - Module is not initialised
  * @retval HDMI_CEC_IO_INVALID_ARGUMENT           - Parameter passed to this function is invalid
- *                                                  should be if any logical address other than 0x0 is given as argument
+ *                                                  i.e. be if any logical address other than 0x0 is given as argument
  * @retval HDMI_CEC_IO_INVALID_HANDLE             - An invalid handle argument has been passed
  * @retval HDMI_CEC_IO_LOGICALADDRESS_UNAVAILABLE - POLL message is sent and 
  *                                                     ACK'd by a device on the bus
@@ -219,8 +219,8 @@ HDMI_CEC_STATUS HdmiCecAddLogicalAddress(int handle, int logicalAddresses);
  * @return HDMI_CEC_STATUS                        - Status
  * @retval HDMI_CEC_IO_SUCCESS                    - Success
  * @retval HDMI_CEC_IO_NOT_OPENED                 - Module is not initialised
- * @retval HDMI_CEC_IO_INVALID_ARGUMENT           - Parameter passed to this function is invalid
- *                                                   should be if any logical address other than 0x0 is given as argument
+ * @retval HDMI_CEC_IO_INVALID_ARGUMENT           - Parameter passed to this function is invalid -
+ *                                                  i.e. if any logical address other than 0x0 is given as argument
  * @retval HDMI_CEC_IO_ALREADY_REMOVED            - Removal operation is already executed
  *                                                    0x0 was previously successfully removed and now trying to remove it again
  * @retval HDMI_CEC_IO_INVALID_HANDLE             - An invalid handle argument has been passed
@@ -281,7 +281,7 @@ HDMI_CEC_STATUS HdmiCecGetLogicalAddress(int handle, int *logicalAddress);
  * @retval HDMI_CEC_IO_NOT_OPENED       - Module is not initialised
  * @retval HDMI_CEC_IO_INVALID_ARGUMENT - Parameter passed to this function is invalid
  * @retval HDMI_CEC_IO_INVALID_HANDLE   - An invalid handle argument has been passed
- * @retval HDMI_CEC_IO_INVALID_OUTPUT   - Physical address can't be retrieved which is outside the valid range
+ * @retval HDMI_CEC_IO_INVALID_OUTPUT   - Physical address can't be retrieved because it is outside the valid range
  * 
  */
 HDMI_CEC_STATUS HdmiCecGetPhysicalAddress(int handle, unsigned int *physicalAddress);
