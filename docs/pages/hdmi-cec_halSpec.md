@@ -4,6 +4,7 @@
 
 | Date (DD/MM/YY) | Comment | Version |
 | --- | --- | --- |
+| 18/10/23 | Minor fixes to align with other modules | 1.0.3 |
 | 13/03/23 | Updated after final review | 1.0.2 |
 | 13/03/23 | Edit  | 1.0.1 |
 | 06/12/22| First Release | 1.0.0 |
@@ -77,15 +78,15 @@ The `CEC` protocol responsibilities will lie between the `caller` and the `HAL`.
 
 ## Component Runtime Execution Requirements
 
-`CEC` message transmit operation should complete within one second. Desired `CEC` response time is **200 milliseconds** and maximum response time should be **1 second** as provided in the `CEC` specifications (`HDMI-CEC Specification`). `Caller` is responsible to perform retry operations as per the `CEC` specification requirements. `Caller` will retry each transmission in line with a requirement as specified in Section `CEC 7.1` of the HMDI-CEC specification.
+`CEC` message transmit operation must complete within one second. Desired `CEC` response time is **200 milliseconds** and maximum response time must be **1 second** as provided in the `CEC` specifications (`HDMI-CEC Specification`). `Caller` is responsible to perform retry operations as per the `CEC` specification requirements. `Caller` will retry each transmission in line with a requirement as specified in Section `CEC 7.1` of the HMDI-CEC specification.
 
 ### Initialization and Startup
 
-`Caller` should initialize by calling `HdmiCecOpen()` before calling any other `API`.
+`Caller` must initialize by calling `HdmiCecOpen()` before calling any other `API`.
 
 ### Threading Model
 
-This interface is not required to be thread safe. Any caller invoking the `APIs` should ensure calls are made in a thread safe manner.
+This interface is not required to be thread safe. Any caller invoking the `APIs` must ensure calls are made in a thread safe manner.
 
 ### Process Model
 
@@ -96,7 +97,7 @@ This interface is required to support a single instantiation with a single proce
 For transmit messages, it is upto the caller to allocate and free the memory for the message buffer. For receive messages, the `HAL` is responsible for memory management. The memory allocated cannot exceed **20 bytes** (`HDMI-CEC Specification` Section `CEC 6`).
 ### Power Management Requirements
 
-Although this interface is not required to be involved in any of the power management operations, the state transitions MUST not affect its operation. e.g. on resumption from a low power state, the interface should operate as if no transition has occurred.
+Although this interface is not required to be involved in any of the power management operations, the state transitions MUST not affect its operation. e.g. on resumption from a low power state, the interface must operate as if no transition has occurred.
 
 ### Asynchronous Notification Model
 
@@ -110,7 +111,7 @@ The caller is required to return the callback context as fast as possible.
 
 ### Blocking calls
 
-There are no blocking calls. Synchronous calls should complete within a reasonable time period in accordance with any relevant `CEC` specification. Any call that can fail due to the lack of response from the connected device should have a timeout period in accordance with any relevant `CEC` specification and the function should return the relevant error code.
+There are no blocking calls. Synchronous calls must complete within a reasonable time period in accordance with any relevant `CEC` specification. Any call that can fail due to the lack of response from the connected device must have a timeout period in accordance with any relevant `CEC` specification and the function must return the relevant error code.
 
 ### Internal Error Handling
 
@@ -124,7 +125,7 @@ There is no requirement for the interface to persist any setting information. `C
 
 ### Logging and debugging requirements
 
-This interface is required to support DEBUG, INFO and ERROR messages. DEBUG should be disabled by default and enabled when required.
+This interface is required to support DEBUG, INFO and ERROR messages. DEBUG and INFO must be disabled by default and enabled when required.
 
 ### Memory and performance requirements
 
@@ -149,7 +150,7 @@ The source code must build into a shared library and must be named as `libRCECHa
  
 ### Variability Management
 
-Any changes in the `APIs` should be reviewed and approved by the component architects.
+Any changes in the `APIs` must be reviewed and approved by the component architects.
 
 ### Platform or Product Customization
 
@@ -163,7 +164,7 @@ None
 
 The caller is expected to have complete control over the life cycle of the `HAL`.
 
-1. Initialize the `HAL` using function: `HdmiCecOpen()` before making any other `API` calls. This call also discovers the physical address based on the connection topology. In case of source devices, `HdmiCecOpen()` should initiate the logical address discovery as part of this routine. In case of sink devices, logical address will be fixed and set using the `HdmiCecAddLogicalAddress()`. If `HdmiCecOpen()` call fails, the `HAL` must return the respective error code, so that the caller can retry the operation.
+1. Initialize the `HAL` using function: `HdmiCecOpen()` before making any other `API` calls. This call also discovers the physical address based on the connection topology. In case of source devices, `HdmiCecOpen()` must initiate the logical address discovery as part of this routine. In case of sink devices, logical address will be fixed and set using the `HdmiCecAddLogicalAddress()`. If `HdmiCecOpen()` call fails, the `HAL` must return the respective error code, so that the caller can retry the operation.
 
 2. Once logical address and physical address are assigned, the caller will be able to send and receive the respective `CEC` messages.
 
@@ -173,7 +174,7 @@ The caller is expected to have complete control over the life cycle of the `HAL`
 
   - For asynchronous transmit, use the function: `HdmiCecTxAsync()`. The caller must register a callback via `HdmiCecSetTxCallback()` in order to receive the status or acknowledgement.
 
-3. De-intialise the `HAL` using the function: `HdmiCecClose()`
+3. De-intialise the `HAL` using the function: `HdmiCecClose()`.
 
 NOTE: The module would operate deterministically if the above call sequence is followed.
 
@@ -194,7 +195,7 @@ NOTE: The module would operate deterministically if the above call sequence is f
     Caller->>HAL:HdmiCecSetTxCallback()
     HAL-->>Caller:return
     Caller ->>HAL:HdmiCecAddLogicalAddress()
-    Note over Caller: Sink devices should set the logical address using the API <br> HdmiCecAddLogicalAddress (Only for sink devices)
+    Note over Caller: Sink devices must set the logical address using the API <br> HdmiCecAddLogicalAddress (Only for sink devices)
     HAL-->>Caller:return
     Caller ->>HAL:HdmiCecGetLogicalAddress()
     HAL-->>Caller:return
