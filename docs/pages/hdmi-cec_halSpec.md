@@ -187,27 +187,45 @@ NOTE: The module would operate deterministically if the above call sequence is f
    sequenceDiagram
     participant Caller as Caller
     participant HAL as HDMI CEC HAL
+    participant Driver as HDMI Device Control/Driver
     Caller->>HAL:HdmiCecOpen()
     Note over HAL: SOC intialises and discovers <br> physical address based on the connection topology <br> source devices discovers logical address internally  based on device type.
+    HAL->>Driver:Open()
+    Driver-->>HAL:return
     HAL-->>Caller:return
     Caller->>HAL:HdmiCecSetRxCallback()
+    HAL->>Driver:SetRxCallback()
+    Driver-->>HAL:return
     HAL-->>Caller:return
     Caller->>HAL:HdmiCecSetTxCallback()
+    HAL->>Driver:SetTxCallback()
+    Driver-->>HAL:return
     HAL-->>Caller:return
     Caller ->>HAL:HdmiCecAddLogicalAddress()
     Note over Caller: Sink devices must set the logical address using the API <br> HdmiCecAddLogicalAddress (Only for sink devices)
+    HAL->>Driver:AddLogicalAddress()
+    Driver-->>HAL:return
     HAL-->>Caller:return
     Caller ->>HAL:HdmiCecGetLogicalAddress()
+    HAL->>Driver:GetLogicalAddress()
+    Driver-->>HAL:return
     HAL-->>Caller:return
     Caller ->>HAL:HdmiCecGetPhysicalAddress()
+    HAL->>Driver:GetPhysicalAddress()
+    Driver-->>HAL:return
     HAL-->>Caller:return
     Caller ->>HAL:HdmiCecTx()
     Note over Caller,HAL: sync CEC transmit message
+    HAL->>Driver:CecTx()
+    Driver-->>HAL:return
     HAL-->>Caller:return
+    Driver-->>HAL:RxCallback()
     Note over HAL: For CEC message received from the remote device, HdmiCecSetRxCallback() will be triggered
     HAL-->>Caller:HdmiCecRxCallback() triggered
     Caller ->>HAL:HdmiCecClose()
     Note over Caller,HAL: SOC De-initialises 
+    HAL->>Driver:Close()
+    Driver-->>HAL:return
     HAL-->>Caller:return
  ```
 
