@@ -64,6 +64,10 @@
  * @{
  */
 
+/**
+ * @file hdmi_cec_driver.h
+ */
+
 #ifndef __HDMI_CEC_DRIVER_H__
 #define __HDMI_CEC_DRIVER_H__
 #ifdef __cplusplus
