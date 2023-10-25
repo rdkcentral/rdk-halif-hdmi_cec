@@ -190,41 +190,41 @@ NOTE: The module would operate deterministically if the above call sequence is f
     participant Driver as HDMI Device Control/Driver
     Caller->>HAL:HdmiCecOpen()
     Note over HAL: SOC intialises and discovers <br> physical address based on the connection topology <br> source devices discovers logical address internally  based on device type.
-    HAL->>Driver:Open()
+    HAL->>Driver: soc intialises
     Driver-->>HAL:return
     HAL-->>Caller:return
     Caller->>HAL:HdmiCecSetRxCallback()
-    HAL->>Driver:SetRxCallback()
+    HAL->>Driver: Setting a receiver callback in soc
     Driver-->>HAL:return
     HAL-->>Caller:return
     Caller->>HAL:HdmiCecSetTxCallback()
-    HAL->>Driver:SetTxCallback()
+    HAL->>Driver:Setting a transmit callback in soc
     Driver-->>HAL:return
     HAL-->>Caller:return
     Caller ->>HAL:HdmiCecAddLogicalAddress()
     Note over Caller: Sink devices must set the logical address using the API <br> HdmiCecAddLogicalAddress (Only for sink devices)
-    HAL->>Driver:AddLogicalAddress()
+    HAL->>Driver: add logical address in soc
     Driver-->>HAL:return
     HAL-->>Caller:return
     Caller ->>HAL:HdmiCecGetLogicalAddress()
-    HAL->>Driver:GetLogicalAddress()
+    HAL->>Driver:Get logical address from soc
     Driver-->>HAL:return
     HAL-->>Caller:return
     Caller ->>HAL:HdmiCecGetPhysicalAddress()
-    HAL->>Driver:GetPhysicalAddress()
+    HAL->>Driver:Get physical address in soc
     Driver-->>HAL:return
     HAL-->>Caller:return
     Caller ->>HAL:HdmiCecTx()
     Note over Caller,HAL: sync CEC transmit message
-    HAL->>Driver:CecTx()
+    HAL->>Driver: Transmit packet in soc side
     Driver-->>HAL:return
     HAL-->>Caller:return
     Driver-->>HAL:RxCallback()
     Note over HAL: For CEC message received from the remote device, HdmiCecSetRxCallback() will be triggered
     HAL-->>Caller:HdmiCecRxCallback() triggered
     Caller ->>HAL:HdmiCecClose()
-    Note over Caller,HAL: SOC De-initialises 
-    HAL->>Driver:Close()
+    Note over Caller,HAL: SOC Un-initialises 
+    HAL->>Driver: Soc Un-initialises
     Driver-->>HAL:return
     HAL-->>Caller:return
  ```

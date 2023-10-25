@@ -95,6 +95,7 @@ typedef enum HDMI_CEC_IO_ERROR
     HDMI_CEC_IO_INVALID_OUTPUT,             ///< Output arguments fall outside the valid range
     HDMI_CEC_IO_INVALID_HANDLE,             ///< An invalid handle argument has been passed
     HDMI_CEC_IO_OPERATION_NOT_SUPPORTED,    ///< Operation not supported
+    HDMI_CEC_IO_NOT_ADDED,                  ///< Not added
     HDMI_CEC_IO_MAX                         ///< Out of range - required to be the 
                                             ///< last item of the enum
 } HDMI_CEC_STATUS;
@@ -224,8 +225,7 @@ HDMI_CEC_STATUS HdmiCecAddLogicalAddress(int handle, int logicalAddresses);
  * @retval HDMI_CEC_IO_NOT_OPENED                 - Module is not initialised
  * @retval HDMI_CEC_IO_INVALID_ARGUMENT           - Parameter passed to this function is invalid -
  *                                                  i.e. if any logical address other than 0x0 is given as argument
- * @retval HDMI_CEC_IO_ALREADY_REMOVED            - Removal operation is already executed
- *                                                    0x0 was previously successfully removed and now trying to remove it again
+ * @retval HDMI_CEC_IO_NOT_ADDED                  - 0x0 was never added before [or] 0x0 was previously removed successfully
  * @retval HDMI_CEC_IO_INVALID_HANDLE             - An invalid handle argument has been passed
  * @retval HDMI_CEC_IO_OPERATION_NOT_SUPPORTED    - Operation not supported. This API is not required if the SOC is performing the logical address discovery.
  *
