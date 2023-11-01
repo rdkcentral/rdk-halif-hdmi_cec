@@ -71,9 +71,9 @@ The interface retrieves and discovers logical and physical address of the host d
 
 The `CEC` protocol responsibilities will lie between the `caller` and the `HAL`. 
 
-  - The `caller` SHALL be responsible for `CEC` higher level protocol as defined in `HDMI-CEC Specification` Section `CEC 12`.
-  - The `caller` SHALL pass fully formed `CEC` messages to the `HAL` for the transmission. 
-  - The `HAL` SHALL be responsible for physical device discovery and announcements on the `CEC` network as defined in the `HDMI-CEC Specification` Section `CEC 10`.
+  - The `caller` must be responsible for `CEC` higher level protocol as defined in `HDMI-CEC Specification` Section `CEC 12`.
+  - The `caller` must pass fully formed `CEC` messages to the `HAL` for the transmission.
+  - The `HAL` must be responsible for physical device discovery and announcements on the `CEC` network as defined in the `HDMI-CEC Specification` Section `CEC 10`.
   - The driver layer is responsible for the physical layer as defined in the Section `CEC 4` (Electrical Specification) and Section `CEC 5` (Signalling and Bit Timings). The driver layer is out-of-scope for this document.
 
 ## Component Runtime Execution Requirements
