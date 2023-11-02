@@ -1,1 +1,1 @@
-./docs/pages/halSpec.md
+./docs/pages/hdmi-cec_halSpec.md
