@@ -202,7 +202,7 @@ HDMI_CEC_STATUS HdmiCecClose(int handle);
  * @warning This API is NOT thread safe.
  * 
  * @see HdmiCecRemoveLogicalAddress(), HdmiCecGetLogicalAddress()
- * @todo This API is not required if the SOC is performing the logical address discovery. This functions will be deprecated soon 
+ * @todo In the next phase sink devices are expected to performing the logical address discovery as part of init functionality. Hence this function will be deprecated then
  */ 
 HDMI_CEC_STATUS HdmiCecAddLogicalAddress(int handle, int logicalAddresses);
 
