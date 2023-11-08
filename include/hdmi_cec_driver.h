@@ -77,7 +77,6 @@ extern "C" {
 /**
  * Error Codes
  * 
- * @todo need to rename the enum names also will do it in the next phase.
  * 
  */
 typedef enum HDMI_CEC_IO_ERROR
@@ -89,7 +88,7 @@ typedef enum HDMI_CEC_IO_ERROR
     HDMI_CEC_IO_NOT_OPENED,                 ///< Module is not initialised
     HDMI_CEC_IO_INVALID_ARGUMENT,           ///< Invalid argument is passed to the module
     HDMI_CEC_IO_LOGICALADDRESS_UNAVAILABLE, ///< Logical address is not available
-    HDMI_CEC_IO_GENERAL_ERROR,              ///< Operation general error. //@todo need to remove it in the next phase. Need to replace with proper error codes.
+    HDMI_CEC_IO_GENERAL_ERROR,              ///< Operation general error.
     HDMI_CEC_IO_ALREADY_OPEN,               ///< Module is already initialised
     HDMI_CEC_IO_ALREADY_REMOVED,            ///< Removal operation is already executed
     HDMI_CEC_IO_INVALID_OUTPUT,             ///< Output arguments fall outside the valid range
@@ -202,7 +201,6 @@ HDMI_CEC_STATUS HdmiCecClose(int handle);
  * @warning This API is NOT thread safe.
  * 
  * @see HdmiCecRemoveLogicalAddress(), HdmiCecGetLogicalAddress()
- * @todo In the next phase sink devices are expected to performing the logical address discovery as part of init functionality. Hence this function will be deprecated then
  */ 
 HDMI_CEC_STATUS HdmiCecAddLogicalAddress(int handle, int logicalAddresses);
 
@@ -231,7 +229,6 @@ HDMI_CEC_STATUS HdmiCecAddLogicalAddress(int handle, int logicalAddresses);
  *
  * @pre HdmiCecOpen() must be called before calling this API.
  * @warning This API is NOT thread safe.
- * @todo This API is not required if the SOC is performing the logical address discovery. This functions will be deprecated soon 
  * @see HdmiCecAddLogicalAddress(), HdmiCecGetLogicalAddress()
  * 
  */
@@ -398,8 +395,6 @@ HDMI_CEC_STATUS HdmiCecSetTxCallback(int handle, HdmiCecTxCallback_t cbfunc, voi
  * @pre  HdmiCecOpen(), HdmiCecSetRxCallback() should be called before calling this API.
  * @warning  This API is Not thread safe.
  * @see HdmiCecTxAsync(), HdmiCecSetRxCallback()
- * @todo Need to check why result argument is required as HDMI_CEC_STATUS already has 
- * similar return types for the same states as in result argument and deprecate the result argument if they are the same in next phase
  * 
  */
 HDMI_CEC_STATUS HdmiCecTx(int handle, const unsigned char *buf, int len, int *result);
