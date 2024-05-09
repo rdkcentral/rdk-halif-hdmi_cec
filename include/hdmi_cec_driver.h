@@ -170,10 +170,8 @@ HDMI_CEC_STATUS HdmiCecClose(int handle);
 /**
  * @brief Adds one Logical Addresses to be used by host device
  *
- * This function will block until the intended logical address is secured by the module.@n
- * HAL will forward all received messages with destination being the acquired logical address.@n
- * HAL should ACK all POLL messages destined to this logical address.@n
- * This API is only applicable for sink devices. Supported logical address value must be 0x0.@n
+ * Caller will take care of discovery of Logical Address and sets the available logical addresses through this API.@n
+ * This API is only applicable for sink devices.@n
  * Invoking this API in source device must return HDMI_CEC_IO_INVALID_ARGUMENT@n@n
  *
  * In HAL implementation, this API would trigger HAL sending a POLL CEC packet to the CEC Bus:@n
@@ -190,7 +188,7 @@ HDMI_CEC_STATUS HdmiCecClose(int handle);
  *                                                    ACK'd by any device on the bus
  * @retval HDMI_CEC_IO_NOT_OPENED                 - Module is not initialised
  * @retval HDMI_CEC_IO_INVALID_ARGUMENT           - Parameter passed to this function is invalid
- *                                                  i.e. be if any logical address other than 0x0 is given as argument
+ *                                                  i.e. be if any logical address less than 0x0 and greater than 0xF is given as argument
  * @retval HDMI_CEC_IO_INVALID_HANDLE             - An invalid handle argument has been passed
  * @retval HDMI_CEC_IO_LOGICALADDRESS_UNAVAILABLE - POLL message is sent and 
  *                                                     ACK'd by a device on the bus
@@ -392,7 +390,7 @@ HDMI_CEC_STATUS HdmiCecSetTxCallback(int handle, HdmiCecTxCallback_t cbfunc, voi
  *                                                    send an invalid logical address
  * @retval HDMI_CEC_IO_SENT_FAILED                - Send message failed
  *
- * @pre  HdmiCecOpen(), HdmiCecSetRxCallback() should be called before calling this API.
+ * @pre  HdmiCecOpen() should be called before calling this API.
  * @warning  This API is Not thread safe.
  * @see HdmiCecTxAsync(), HdmiCecSetRxCallback()
  * 
