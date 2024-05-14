@@ -206,11 +206,13 @@ HDMI_CEC_STATUS HdmiCecAddLogicalAddress(int handle, int logicalAddresses);
  * @brief Clears the Logical Addresses claimed by the host device
  *
  * This function releases the previously acquired logical address.@n
- * Once released, the module must not ACK any POLL message destined to the
- * released address.@n
+ * Once released,
+ * 1. This API must set the logical address to the default value (0xF).
+ * 2. Also the module must not ACK any POLL message destined to the released address.@n
+ *
  * Subsequent calls to this API will return HDMI_CEC_IO_SUCCESS.
- * This API is only applicable for sink devices. Invoking this API in source 
- *  device must return HDMI_CEC_IO_INVALID_ARGUMENT@n@n
+ *
+ * This API is only applicable for sink devices. Invoking this API in source device must return HDMI_CEC_IO_INVALID_ARGUMENT@n@n
  * 
  *
  * @param[in] handle                   - The handle returned from the HdmiCecOpen(). Non zero value
@@ -221,7 +223,7 @@ HDMI_CEC_STATUS HdmiCecAddLogicalAddress(int handle, int logicalAddresses);
  * @retval HDMI_CEC_IO_NOT_OPENED                 - Module is not initialised
  * @retval HDMI_CEC_IO_INVALID_ARGUMENT           - Parameter passed to this function is invalid -
  *                                                  i.e. if any logical address less than 0x0 and greater than 0xF is given as argument
- * @retval HDMI_CEC_IO_NOT_ADDED                  - The default value set after removal is 0x0F
+ * @retval HDMI_CEC_IO_NOT_ADDED                  - Logical address was never added before [or] was previously removed successfully
  * @retval HDMI_CEC_IO_INVALID_HANDLE             - An invalid handle argument has been passed
  * @retval HDMI_CEC_IO_OPERATION_NOT_SUPPORTED    - Operation not supported. This API is not required if the SOC is performing the logical address discovery.
  *
