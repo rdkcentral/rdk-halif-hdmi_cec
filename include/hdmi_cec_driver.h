@@ -220,8 +220,8 @@ HDMI_CEC_STATUS HdmiCecAddLogicalAddress(int handle, int logicalAddresses);
  * @retval HDMI_CEC_IO_SUCCESS                    - Success
  * @retval HDMI_CEC_IO_NOT_OPENED                 - Module is not initialised
  * @retval HDMI_CEC_IO_INVALID_ARGUMENT           - Parameter passed to this function is invalid -
- *                                                  i.e. if any logical address other than 0x0 is given as argument
- * @retval HDMI_CEC_IO_NOT_ADDED                  - 0x0 was never added before [or] 0x0 was previously removed successfully
+ *                                                  i.e. if any logical address less than 0x0 and greater than 0xF is given as argument
+ * @retval HDMI_CEC_IO_NOT_ADDED                  - The default value set after removal is 0x0F
  * @retval HDMI_CEC_IO_INVALID_HANDLE             - An invalid handle argument has been passed
  * @retval HDMI_CEC_IO_OPERATION_NOT_SUPPORTED    - Operation not supported. This API is not required if the SOC is performing the logical address discovery.
  *
@@ -397,31 +397,6 @@ HDMI_CEC_STATUS HdmiCecSetTxCallback(int handle, HdmiCecTxCallback_t cbfunc, voi
  */
 HDMI_CEC_STATUS HdmiCecTx(int handle, const unsigned char *buf, int len, int *result);
 
-/**
- * @brief Writes CEC packet onto bus asynchronously.
- *
- * This function writes a complete CEC packet onto the bus but does not wait
- * for ACK. The result will be reported via HdmiCecRxCallback_t()
- *
- *
- * @param[in] handle                              - The handle returned from the 
- *                                                    HdmiCecOpen() function. Non zero value
- * @param[in] buf                                 - The buffer contains a complete 
- *                                                    CEC packet to send
- * @param[in] len                                 - Number of bytes in the packet
- *
- * @return HDMI_CEC_STATUS                        - Status
- * @retval HDMI_CEC_IO_SUCCESS                    - Success
- * @retval HDMI_CEC_IO_NOT_OPENED                 - Module is not initialised
- * @retval HDMI_CEC_IO_INVALID_ARGUMENT           - Parameter passed to this function is invalid
- * @retval HDMI_CEC_IO_INVALID_HANDLE             - An invalid handle argument has been passed
- *
- * @pre  HdmiCecOpen(), HdmiCecSetRxCallback(), HdmiCecSetTxCallback()  should be called before calling this API.
- * @warning  This API is Not thread safe.
- * @see HdmiCecTx(), HdmiCecSetRxCallback()
- * 
- */
-HDMI_CEC_STATUS HdmiCecTxAsync(int handle, const unsigned char *buf, int len);
 #ifdef __cplusplus
 }
 #endif
