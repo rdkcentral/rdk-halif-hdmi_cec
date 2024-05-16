@@ -377,9 +377,9 @@ HDMI_CEC_STATUS HdmiCecSetTxCallback(int handle, HdmiCecTxCallback_t cbfunc, voi
  *                                                    CEC packet to send.
  * @param[in] len                                 - Number of bytes in the packet.
  * @param[out] result                             - send status buffer. Possible results are 
- *                    SENT_AND_ACKD,
- *                    SENT_BUT_NOT_ACKD (e.g. no follower at the destination),
- *                    SENT_FAILED (e.g. collision).
+ *                    HDMI_CEC_IO_SENT_AND_ACKD,
+ *                    HDMI_CEC_IO_SENT_BUT_NOT_ACKD (e.g. no follower at the destination),
+ *                    HDMI_CEC_IO_SENT_FAILED (e.g. collision).
  *
  * @return HDMI_CEC_STATUS                        - Status
  * @retval HDMI_CEC_IO_SUCCESS                    - Success
