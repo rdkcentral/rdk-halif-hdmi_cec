@@ -121,6 +121,10 @@ typedef void (*HdmiCecTxCallback_t)(int handle, void *callbackData, int result);
  *
  * This function is required to be called before the other APIs in this module.@n
  * Subsequent calls to this API will return HDMI_CEC_IO_SUCCESS.
+ * For HDMI source devices, logical address discovery takes place during HdmiCecOpen() and
+ * can be obtained via HdmiCecGetLogicalAddress().
+ * For HDMI sink devices, logical address discovery does not occur during HdmiCecOpen() and
+ * must be managed by the caller.
  *
  * @param [out] handle                    - The handle used by application to uniquely 
  *                                          identify the HAL instance
