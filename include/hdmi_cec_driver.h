@@ -135,6 +135,7 @@ typedef void (*HdmiCecTxCallback_t)(int handle, void *callbackData, int result);
  * @note For HDMI source devices only, the logical address discovery also occurs in HdmiCecOpen() and
  * can be retrieved from HdmiCecGetLogicalAddress().
  * 
+ * @post HdmiCecClose() must be called to release resources.
  * @warning This API is NOT thread safe.
  *
  * @see HdmiCecClose()
@@ -368,9 +369,9 @@ HDMI_CEC_STATUS HdmiCecSetTxCallback(int handle, HdmiCecTxCallback_t cbfunc, voi
  *                                                    CEC message to send.
  * @param[in] len                                 - Number of bytes in the message.
  * @param[out] result                             - send status buffer. Possible results are 
- *                    SENT_AND_ACKD,
- *                    SENT_BUT_NOT_ACKD (e.g. no follower at the destination),
- *                    SENT_FAILED (e.g. collision).
+ *                    HDMI_CEC_IO_SENT_AND_ACKD,
+ *                    HDMI_CEC_IO_SENT_BUT_NOT_ACKD (e.g. no follower at the destination),
+ *                    HDMI_CEC_IO_SENT_FAILED (e.g. collision).
  *
  * @return HDMI_CEC_STATUS                        - Status
  * @retval HDMI_CEC_IO_SUCCESS                    - Success
