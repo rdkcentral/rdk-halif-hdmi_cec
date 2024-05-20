@@ -136,8 +136,6 @@ typedef void (*HdmiCecTxCallback_t)(int handle, void *callbackData, int result);
  * @retval HDMI_CEC_IO_INVALID_ARGUMENT           - Parameter passed to this function is invalid
  * @retval HDMI_CEC_IO_LOGICALADDRESS_UNAVAILABLE - Logical address is not available for source devices. 
  * 
- * @note For HDMI source devices only, the logical address discovery also occurs in HdmiCecOpen() and
- * can be retrieved from HdmiCecGetLogicalAddress().
  * 
  * @post HdmiCecClose() must be called to release resources.
  * @warning This API is NOT thread safe.
