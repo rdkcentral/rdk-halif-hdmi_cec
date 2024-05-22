@@ -1,14 +1,5 @@
 # HDMI CEC HAL Documentation
 
-## Version History
-
-| Date (DD/MM/YY) | Comment | Version |
-| --- | --- | --- |
-| 18/10/23 | Minor fixes to align with other modules | 1.0.3 |
-| 13/03/23 | Updated after final review | 1.0.2 |
-| 13/03/23 | Edit  | 1.0.1 |
-| 06/12/22| First Release | 1.0.0 |
-
 ## Table of Contents
 
 - [Acronyms, Terms and Abbreviations](#acronyms-terms-and-abbreviations)
@@ -44,7 +35,6 @@
 - `API`    - Application Programming Interface
 - `Caller` - Any user of the interface via the `APIs`
 
-
 ## References
 
 - `HDMI-CEC Specification` - High-Definition Multimedia Interface, Specification Version 1.3a, (https://www.hdmi.org/)
@@ -69,7 +59,7 @@ This interface provides a set of `APIs` to facilitate communication through the 
 
 The interface retrieves and discovers logical and physical address of the host device, it is responsibile for transmitting and receiving messages with remote device(s) synchronously / asynchronously.
 
-The `CEC` protocol responsibilities will lie between the `caller` and the `HAL`. 
+The `CEC` protocol responsibilities will lie between the `caller` and the `HAL`.
 
   - The `caller` must be responsible for `CEC` higher level protocol as defined in `HDMI-CEC Specification` Section `CEC 12`.
   - The `caller` must pass fully formed `CEC` messages to the `HAL` for the transmission.
@@ -95,6 +85,7 @@ This interface is required to support a single instantiation with a single proce
 ### Memory Model
 
 For transmit messages, it is upto the caller to allocate and free the memory for the message buffer. For receive messages, the `HAL` is responsible for memory management. The memory allocated cannot exceed **20 bytes** (`HDMI-CEC Specification` Section `CEC 6`).
+
 ### Power Management Requirements
 
 Although this interface is not required to be involved in any of the power management operations, the state transitions MUST not affect its operation. e.g. on resumption from a low power state, the interface must operate as if no transition has occurred.
@@ -174,7 +165,7 @@ The caller is expected to have complete control over the life cycle of the `HAL`
 
   - For asynchronous transmit, use the function: `HdmiCecTxAsync()`. The caller must register a callback via `HdmiCecSetTxCallback()` in order to receive the status or acknowledgement.
 
-3. De-intialise the `HAL` using the function: `HdmiCecClose()`.
+3.De-intialise the `HAL` using the function: `HdmiCecClose()`.
 
 NOTE: The module would operate deterministically if the above call sequence is followed.
 
@@ -228,4 +219,3 @@ NOTE: The module would operate deterministically if the above call sequence is f
     Driver-->>HAL:return
     HAL-->>Caller:return
  ```
-
