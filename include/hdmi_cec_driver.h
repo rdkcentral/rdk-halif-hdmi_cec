@@ -159,7 +159,7 @@ HDMI_CEC_STATUS HdmiCecOpen(int *handle);
  * @retval HDMI_CEC_IO_NOT_OPENED       - Module is not initialised
  * @retval HDMI_CEC_IO_INVALID_HANDLE   - An invalid handle argument has been passed
  *
- * @pre HdmiCecOpen() must be called before calling this API.
+ * @pre HdmiCecOpen(), HdmiCecRemoveLogicalAddress() must be called before calling this API.
  * @warning This API is NOT thread safe.
  *
  * @see HdmiCecOpen()
@@ -264,7 +264,7 @@ HDMI_CEC_STATUS HdmiCecGetLogicalAddress(int handle, int *logicalAddress);
  *    The valid Physical address is less than F.F.F.F
  *    The Sink device at root will take 0.0.0.0 as the Physical Address
  * 
- * @pre HdmiCecOpen() must be called before calling this API.
+ * @pre HdmiCecOpen(), HdmiCecAddLogicalAddress() (for sink devices only) must be called before calling this API.
  * @warning This API is NOT thread safe.
  * @see HdmiCecGetLogicalAddress()
  *
@@ -321,7 +321,7 @@ HDMI_CEC_STATUS HdmiCecGetPhysicalAddress(int handle, unsigned int *physicalAddr
  * @retval HDMI_CEC_IO_NOT_OPENED       - Module is not initialised
  * @retval HDMI_CEC_IO_INVALID_HANDLE   - An invalid handle argument has been passed
  *
- * @pre HdmiCecOpen() must be called before calling this API.
+ * @pre HdmiCecOpen(), HdmiCecAddLogicalAddress() (for sink devices only) must be called before calling this API.
  * @warning This API is NOT thread safe.
  * @see HdmiCecTx(), HdmiCecTxAsync(), HdmiCecSetTxCallback()
  * 
@@ -386,7 +386,7 @@ HDMI_CEC_STATUS HdmiCecSetTxCallback(int handle, HdmiCecTxCallback_t cbfunc, voi
  *                                                    send an invalid logical address
  * @retval HDMI_CEC_IO_SENT_FAILED                - Send message failed
  *
- * @pre  HdmiCecOpen() should be called before calling this API.
+ * @pre  HdmiCecOpen(), HdmiCecAddLogicalAddress() (for sink devices only) should be called before calling this API.
  * @warning  This API is Not thread safe.
  * @see HdmiCecTxAsync(), HdmiCecSetRxCallback()
  * 
