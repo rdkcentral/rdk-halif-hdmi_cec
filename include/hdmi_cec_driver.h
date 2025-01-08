@@ -264,7 +264,7 @@ HDMI_CEC_STATUS HdmiCecGetLogicalAddress(int handle, int *logicalAddress);
  *    The valid Physical address is less than F.F.F.F
  *    The Sink device at root will take 0.0.0.0 as the Physical Address
  * 
- * @pre HdmiCecOpen(), HdmiCecAddLogicalAddress() (for sink devices only) must be called before calling this API.
+ * @pre HdmiCecOpen() must be called before calling this API.
  * @warning This API is NOT thread safe.
  * @see HdmiCecGetLogicalAddress()
  *
