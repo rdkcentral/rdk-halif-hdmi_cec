@@ -159,7 +159,7 @@ HDMI_CEC_STATUS HdmiCecOpen(int *handle);
  * @retval HDMI_CEC_IO_NOT_OPENED       - Module is not initialised
  * @retval HDMI_CEC_IO_INVALID_HANDLE   - An invalid handle argument has been passed
  *
- * @pre HdmiCecOpen(), HdmiCecRemoveLogicalAddress() must be called before calling this API.
+ * @pre HdmiCecOpen() must be called before calling this API.
  * @warning This API is NOT thread safe.
  *
  * @see HdmiCecOpen()
