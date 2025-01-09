@@ -386,7 +386,7 @@ HDMI_CEC_STATUS HdmiCecSetTxCallback(int handle, HdmiCecTxCallback_t cbfunc, voi
  *                                                    send an invalid logical address
  * @retval HDMI_CEC_IO_SENT_FAILED                - Send message failed
  *
- * @pre  HdmiCecOpen(), HdmiCecAddLogicalAddress() (for sink devices only for all messages except Poll) should be called before calling this API.
+ * @pre  HdmiCecOpen(), HdmiCecAddLogicalAddress() (for sink devices only, for all messages except Poll) should be called before calling this API.
  * @warning  This API is Not thread safe.
  * @see HdmiCecTxAsync(), HdmiCecSetRxCallback()
  * 
