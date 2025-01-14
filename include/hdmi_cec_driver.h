@@ -321,7 +321,7 @@ HDMI_CEC_STATUS HdmiCecGetPhysicalAddress(int handle, unsigned int *physicalAddr
  * @retval HDMI_CEC_IO_NOT_OPENED       - Module is not initialised
  * @retval HDMI_CEC_IO_INVALID_HANDLE   - An invalid handle argument has been passed
  *
- * @pre HdmiCecOpen(), HdmiCecAddLogicalAddress() (for sink devices and only for receiving directly addressed CEC messages) must be called before calling this API.
+ * @pre HdmiCecOpen() must be called before calling this API.
  * @warning This API is NOT thread safe.
  * @see HdmiCecTx(), HdmiCecTxAsync(), HdmiCecSetTxCallback()
  * 
@@ -370,7 +370,7 @@ HDMI_CEC_STATUS HdmiCecSetTxCallback(int handle, HdmiCecTxCallback_t cbfunc, voi
  * @param[in] buf                                 - The buffer contains a complete 
  *                                                    CEC message to send.
  * @param[in] len                                 - Number of bytes in the message.
- * @param[out] result                             - send status buffer. Possible results are 
+ * @param[out] result                             - send status buffer. Possible results(valid only for directly addressed messages) are 
  *                    HDMI_CEC_IO_SENT_AND_ACKD,
  *                    HDMI_CEC_IO_SENT_BUT_NOT_ACKD (e.g. no follower at the destination),
  *                    HDMI_CEC_IO_SENT_FAILED (e.g. collision).
@@ -386,7 +386,7 @@ HDMI_CEC_STATUS HdmiCecSetTxCallback(int handle, HdmiCecTxCallback_t cbfunc, voi
  *                                                    send an invalid logical address
  * @retval HDMI_CEC_IO_SENT_FAILED                - Send message failed
  *
- * @pre  HdmiCecOpen(), HdmiCecAddLogicalAddress() (for sink devices only, for all messages except Poll) should be called before calling this API.
+ * @pre  HdmiCecOpen() should be called before calling this API.
  * @warning  This API is Not thread safe.
  * @see HdmiCecTxAsync(), HdmiCecSetRxCallback()
  * 
