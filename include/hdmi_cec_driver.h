@@ -389,7 +389,7 @@ HDMI_CEC_STATUS HdmiCecSetTxCallback(int handle, HdmiCecTxCallback_t cbfunc, voi
  * @pre  HdmiCecOpen() should be called before calling this API.
  * @warning  This API is Not thread safe.
  * @see HdmiCecTxAsync(), HdmiCecSetRxCallback()
- * 
+ *
  */
 HDMI_CEC_STATUS HdmiCecTx(int handle, const unsigned char *buf, int len, int *result);
 
