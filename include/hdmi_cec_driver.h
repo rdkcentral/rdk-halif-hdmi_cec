@@ -370,7 +370,7 @@ HDMI_CEC_STATUS HdmiCecSetTxCallback(int handle, HdmiCecTxCallback_t cbfunc, voi
  * @param[in] buf                                 - The buffer contains a complete 
  *                                                    CEC message to send.
  * @param[in] len                                 - Number of bytes in the message.
- * @param[out] result                             - send status buffer. Possible results are 
+ * @param[out] result                             - send status buffer. Possible results(valid only for directly addressed messages) are 
  *                    HDMI_CEC_IO_SENT_AND_ACKD,
  *                    HDMI_CEC_IO_SENT_BUT_NOT_ACKD (e.g. no follower at the destination),
  *                    HDMI_CEC_IO_SENT_FAILED (e.g. collision).
@@ -389,7 +389,7 @@ HDMI_CEC_STATUS HdmiCecSetTxCallback(int handle, HdmiCecTxCallback_t cbfunc, voi
  * @pre  HdmiCecOpen() should be called before calling this API.
  * @warning  This API is Not thread safe.
  * @see HdmiCecTxAsync(), HdmiCecSetRxCallback()
- * 
+ *
  */
 HDMI_CEC_STATUS HdmiCecTx(int handle, const unsigned char *buf, int len, int *result);
 
