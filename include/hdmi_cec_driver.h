@@ -202,7 +202,6 @@ HDMI_CEC_STATUS HdmiCecAddLogicalAddress(int handle, int logicalAddresses);
  * 1. This API must set the logical address to the default value (0xF).
  * 2. Also the module must not ACK any POLL message destined to the released address.@n
  *
- * Subsequent calls to this API will return HDMI_CEC_IO_SUCCESS.
  *
  * This API is only applicable for sink devices. Invoking this API in source device must return HDMI_CEC_IO_INVALID_ARGUMENT@n@n
  * 
