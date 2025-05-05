@@ -419,6 +419,8 @@ HDMI_CEC_STATUS HdmiCecTx(int handle, const unsigned char *buf, int len, int *re
  *
  */
 HDMI_CEC_STATUS HdmiCecTxAsync(int handle, const unsigned char *buf, int len);
+
+HDMI_CEC_STATUS HdmiCecSendOTP(int handle);
 #ifdef __cplusplus
 }
 #endif
