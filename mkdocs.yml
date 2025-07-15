@@ -25,16 +25,9 @@ site_url: https://github.com/rdkcentral/rdk-halif-hdmi_cec
 repo_url: https://github.com/rdkcentral/rdk-halif-hdmi_cec
 repo_name: rdkcentral/rdk-halif-hdmi_cec
 
-docs_dir: docs/pages
-site_dir: site
-
 nav:
     - HAL Documentation:
-      - HDMI CEC:  hdmi-cec_halSpec.md
-      - Contributing: CONTRIBUTING.md
-      - License: LICENSE.md
-      - Notice: NOTICE.md
-      - Changelog: CHANGELOG.md
+      - HDMI CEC:  pages/hdmi-cec_halSpec.md
 
 plugins:
   - search
