@@ -53,7 +53,7 @@ x[HDMI CEC HAL]-->z[HDMI CEC SOC Driver];
 style y fill:#99CCFF,stroke:#333,stroke-width:0.3px,align:left
 style z fill:#fcc,stroke:#333,stroke-width:0.3px,align:left
 style x fill:#9f9,stroke:#333,stroke-width:0.3px,align:left
- ```
+```
 
 This interface provides a set of `APIs` to facilitate communication through the driver for `CEC` messages with other `CEC` devices connected with HDMI cable.
 
@@ -218,4 +218,4 @@ NOTE: The module would operate deterministically if the above call sequence is f
     HAL->>Driver: Soc Un-initialises
     Driver-->>HAL:return
     HAL-->>Caller:return
- ```
+```

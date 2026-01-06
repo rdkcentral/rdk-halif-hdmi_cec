@@ -172,7 +172,7 @@ HDMI_CEC_STATUS HdmiCecClose(int handle);
  *
  * Caller will take care of discovery of Logical Address and sets the available logical addresses through this API.@n
  * This API is only applicable for sink devices.@n
- * Invoking this API in source device must return HDMI_CEC_IO_INVALID_ARGUMENT@n@n
+ * Invoking this API in source device must return HDMI_CEC_IO_OPERATION_NOT_SUPPORTED@n@n
  *
  *
  * @param[in] handle                              - The handle returned from the HdmiCecOpen() 
@@ -186,6 +186,7 @@ HDMI_CEC_STATUS HdmiCecClose(int handle);
  * @retval HDMI_CEC_IO_INVALID_ARGUMENT           - Parameter passed to this function is invalid
  *                                                  i.e. be if any logical address less than 0x0 and greater than 0xF is given as argument
  * @retval HDMI_CEC_IO_INVALID_HANDLE             - An invalid handle argument has been passed
+ * @retval HDMI_CEC_IO_OPERATION_NOT_SUPPORTED    - The attempted operation is not supported
  *
  * @pre HdmiCecOpen() must be called before calling this API.
  * @warning This API is NOT thread safe.
@@ -203,7 +204,7 @@ HDMI_CEC_STATUS HdmiCecAddLogicalAddress(int handle, int logicalAddresses);
  * 2. Also the module must not ACK any POLL message destined to the released address.@n
  *
  *
- * This API is only applicable for sink devices. Invoking this API in source device must return HDMI_CEC_IO_INVALID_ARGUMENT@n@n
+ * This API is only applicable for sink devices. Invoking this API in source device must return HDMI_CEC_IO_OPERATION_NOT_SUPPORTED@n@n
  * 
  *
  * @param[in] handle                   - The handle returned from the HdmiCecOpen(). Non zero value
@@ -217,6 +218,7 @@ HDMI_CEC_STATUS HdmiCecAddLogicalAddress(int handle, int logicalAddresses);
  * @retval HDMI_CEC_IO_NOT_ADDED                  - Logical address was never added before [or] was previously removed successfully
  * @retval HDMI_CEC_IO_INVALID_HANDLE             - An invalid handle argument has been passed
  * @retval HDMI_CEC_IO_OPERATION_NOT_SUPPORTED    - Operation not supported. This API is not required if the SOC is performing the logical address discovery.
+ *                                                  This operation is not supported in source devices.
  *
  * @pre HdmiCecOpen() must be called before calling this API.
  * @warning This API is NOT thread safe.
