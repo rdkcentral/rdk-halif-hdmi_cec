@@ -120,11 +120,12 @@ typedef void (*HdmiCecTxCallback_t)(int handle, void *callbackData, int result);
  * @brief Initializes the HDMI CEC HAL
  *
  * This function is required to be called before the other APIs in this module.@n
- * Subsequent calls to this API will return HDMI_CEC_IO_SUCCESS.
  * For HDMI source devices, logical address discovery takes place during HdmiCecOpen() and
- * can be obtained via HdmiCecGetLogicalAddress().
+ * can be obtained via HdmiCecGetLogicalAddress().@n
  * For HDMI sink devices, logical address discovery does not occur during HdmiCecOpen() and
- * must be managed by the caller.
+ * must be managed by the caller.@n
+ * A valid handle is returned only on HDMI_CEC_IO_SUCCESS; for all other return codes the
+ * handle is invalid and HdmiCecClose() must not be called.
  *
  * @param [out] handle                    - The handle used by application to uniquely 
  *                                          identify the HAL instance
@@ -134,30 +135,40 @@ typedef void (*HdmiCecTxCallback_t)(int handle, void *callbackData, int result);
  * @retval HDMI_CEC_IO_ALREADY_OPEN               - Function is already open. 
  *                                                  This error code will deprecated in the next phase.
  * @retval HDMI_CEC_IO_INVALID_ARGUMENT           - Parameter passed to this function is invalid
- * @retval HDMI_CEC_IO_LOGICALADDRESS_UNAVAILABLE - Logical address is not available for source devices. 
+ * @retval HDMI_CEC_IO_LOGICALADDRESS_UNAVAILABLE - CEC bus is unavailable at open time
+ *                                                  (e.g. no sink present for source devices,
+ *                                                  or cable disconnected for any device type)
+ * @retval HDMI_CEC_IO_GENERAL_ERROR              - Unexpected hardware or platform failure
  * 
  * 
- * @post HdmiCecClose() must be called to release resources.
+ * @post HdmiCecClose() must be called to release resources. Applicable only when
+ *       HDMI_CEC_IO_SUCCESS is returned.
  * @warning This API is NOT thread safe.
  *
  * @see HdmiCecClose()
- *
  */
 HDMI_CEC_STATUS HdmiCecOpen(int *handle);
 
 /**
  * @brief Closes an instance of HDMI CEC HAL
  *
- * This function will uninitialise the module.@n
- * Close will clear up registered logical addresses.@n
- * Subsequent calls to this API will return HDMI_CEC_IO_SUCCESS.
+ * This function uninitialises the module, clears all registered logical addresses,
+ * and deregisters all callbacks.@n
+ * This function succeeds regardless of HDMI cable connection state for all device types.@n
+ * For source devices, it is safe to call from an HPD (Hot Plug Detect) event handler;
+ * middleware is expected to call HdmiCecClose() on every HPD event and reinitialise
+ * from scratch via HdmiCecOpen().
  *
  * @param[in] handle - The handle returned from the HdmiCecOpen(). Non zero value
  *
  * @return HDMI_CEC_STATUS              - Status
  * @retval HDMI_CEC_IO_SUCCESS          - Success
- * @retval HDMI_CEC_IO_NOT_OPENED       - Module is not initialised
+ * @retval HDMI_CEC_IO_NOT_OPENED       - Module is not open: HdmiCecOpen() was never called,
+ *                                        the last HdmiCecOpen() did not return
+ *                                        HDMI_CEC_IO_SUCCESS, or HdmiCecClose() has
+ *                                        already been called successfully
  * @retval HDMI_CEC_IO_INVALID_HANDLE   - An invalid handle argument has been passed
+ * @retval HDMI_CEC_IO_GENERAL_ERROR    - Unexpected platform-level failure
  *
  * @pre HdmiCecOpen() must be called before calling this API.
  * @warning This API is NOT thread safe.
@@ -259,6 +270,10 @@ HDMI_CEC_STATUS HdmiCecGetLogicalAddress(int handle, int *logicalAddress);
  * @brief Gets the Physical Address obtained by the module
  *
  * This function gets the Physical address for the specified device type.
+ * If the platform returns the unassigned sentinel value 0xF.F.F.F (0xFFFF), as
+ * defined in HDMI 1.4b, or if the HDMI topology changes after HdmiCecOpen()
+ * (for example, due to a hot-unplug event), HDMI_CEC_IO_INVALID_OUTPUT is
+ * returned.
  *
  * @param[in] handle            - The handle returned from the HdmiCecOpen(). Non zero value
  * @param[out] physicalAddress  - Physical address acquired
@@ -309,10 +324,12 @@ HDMI_CEC_STATUS HdmiCecGetPhysicalAddress(int handle, unsigned int *physicalAddr
  *
  * When HdmiCecSetRxCallback() is called, it replaces the previous set cbfunc and data
  * values. Setting a value of (cbfunc=null) disables the callback.
+ * All registered callbacks are deregistered by HdmiCecClose() and must be re-registered
+ * after each subsequent HdmiCecOpen() call.
  *
  * This function will block if callback invocation is in progress.
  *
- * @param[in] handle                    - The handle returned from the HdmiCecOpen(() function. Non zero value
+ * @param[in] handle                    - The handle returned from the HdmiCecOpen() function. Non zero value
  * @param[in] cbfunc                    - Function pointer to be invoked 
  *                                          when a complete message is received
  * @param[in] data                      - Callback data
@@ -321,6 +338,7 @@ HDMI_CEC_STATUS HdmiCecGetPhysicalAddress(int handle, unsigned int *physicalAddr
  * @retval HDMI_CEC_IO_SUCCESS          - Success
  * @retval HDMI_CEC_IO_NOT_OPENED       - Module is not initialised
  * @retval HDMI_CEC_IO_INVALID_HANDLE   - An invalid handle argument has been passed
+ * @retval HDMI_CEC_IO_INVALID_ARGUMENT - if data is invalid or null.
  *
  * @pre HdmiCecOpen() must be called before calling this API.
  * @warning This API is NOT thread safe.
@@ -337,6 +355,8 @@ HDMI_CEC_STATUS HdmiCecSetRxCallback(int handle, HdmiCecRxCallback_t cbfunc, voi
  * This function sets a callback which will be invoked once the async transmit
  * result is available. This is only necessary if the caller chooses to transmit
  * the message asynchronously.
+ * All registered callbacks are deregistered by HdmiCecClose() and must be re-registered
+ * after each subsequent HdmiCecOpen() call.
  *
  * This function will block if callback invocation is in progress.
  *
@@ -349,6 +369,7 @@ HDMI_CEC_STATUS HdmiCecSetRxCallback(int handle, HdmiCecRxCallback_t cbfunc, voi
  * @retval HDMI_CEC_IO_SUCCESS          - Success
  * @retval HDMI_CEC_IO_NOT_OPENED       - Module is not initialised
  * @retval HDMI_CEC_IO_INVALID_HANDLE   - An invalid handle argument has been passed
+ * @retval HDMI_CEC_IO_INVALID_ARGUMENT - if data is invalid or null.
  *
  * @pre HdmiCecOpen() must be called before calling this API.
  * @warning This API is NOT thread safe.
@@ -365,27 +386,43 @@ HDMI_CEC_STATUS HdmiCecSetTxCallback(int handle, HdmiCecTxCallback_t cbfunc, voi
  * The message contained in the buffer will follow the format detailed in HdmiCecSetRxCallback_t().
  * (ref <HDMI Specification 1-4> Section <CEC 6.1>)
  *
+ * @note Two-step result check:
+ *       1. Check the return value first — if it is not HDMI_CEC_IO_SUCCESS, the transmission
+ *          was never attempted (API precondition failure) and the result out-parameter is
+ *          undefined.
+ *       2. If the return value is HDMI_CEC_IO_SUCCESS, inspect the result out-parameter for
+ *          the CEC bus transmission outcome (for directly addressed messages only).
  *
  * @param[in] handle                              - The handle returned from the 
  *                                                    HdmiCecOpen() function. Non zero value
  * @param[in] buf                                 - The buffer contains a complete 
  *                                                    CEC message to send.
  * @param[in] len                                 - Number of bytes in the message.
- * @param[out] result                             - send status buffer. Possible results(valid only for directly addressed messages) are 
- *                    HDMI_CEC_IO_SENT_AND_ACKD,
- *                    HDMI_CEC_IO_SENT_BUT_NOT_ACKD (e.g. no follower at the destination),
- *                    HDMI_CEC_IO_SENT_FAILED (e.g. collision).
+ * @param[out] result                             - CEC bus transmission outcome. Valid only when
+ *                                                  the return value is HDMI_CEC_IO_SUCCESS and
+ *                                                  the message is directly addressed (undefined
+ *                                                  for broadcast messages). Possible values:
+ *                    HDMI_CEC_IO_SENT_AND_ACKD      - message sent and acknowledged
+ *                    HDMI_CEC_IO_SENT_BUT_NOT_ACKD  - message sent but not acknowledged
+ *                                                     (e.g. no device at the destination address)
+ *                    HDMI_CEC_IO_SENT_FAILED         - message could not be sent
+ *                                                     (e.g. bus collision or cable not connected)
  *
- * @return HDMI_CEC_STATUS                        - Status
- * @retval HDMI_CEC_IO_SUCCESS                    - Success
- * @retval HDMI_CEC_IO_NOT_OPENED                 - Module is not initialised
- * @retval HDMI_CEC_IO_INVALID_ARGUMENT           - Parameter passed to this function is invalid
- * @retval HDMI_CEC_IO_INVALID_HANDLE             - An invalid handle argument has been passed
- * @retval HDMI_CEC_IO_SENT_AND_ACKD              - Cec message is send and acknowledged.
- * @retval HDMI_CEC_IO_SENT_BUT_NOT_ACKD          - Message sent but not acknowledged 
- *                                                    by the receiver. Host device is trying to 
- *                                                    send an invalid logical address
- * @retval HDMI_CEC_IO_SENT_FAILED                - Send message failed
+ * @return HDMI_CEC_STATUS                        - API call status (check before inspecting result)
+ * @retval HDMI_CEC_IO_SUCCESS                    - Transmission attempted; inspect result for
+ *                                                  the bus outcome
+ * @retval HDMI_CEC_IO_NOT_OPENED                 - Module is not initialised; transmission not
+ *                                                  attempted, result is undefined
+ * @retval HDMI_CEC_IO_INVALID_ARGUMENT           - Parameter passed to this function is invalid;
+ *                                                  transmission not attempted, result is undefined
+ * @retval HDMI_CEC_IO_INVALID_HANDLE             - Invalid handle; transmission not attempted,
+ *                                                  result is undefined
+ * @retval HDMI_CEC_IO_SENT_AND_ACKD              - Message sent and acknowledged (platform may
+ *                                                  return bus outcome directly instead of SUCCESS)
+ * @retval HDMI_CEC_IO_SENT_BUT_NOT_ACKD          - Message sent but not acknowledged (platform may
+ *                                                  return bus outcome directly instead of SUCCESS)
+ * @retval HDMI_CEC_IO_SENT_FAILED                - Message could not be sent (platform may
+ *                                                  return bus outcome directly instead of SUCCESS)
  *
  * @pre  HdmiCecOpen() should be called before calling this API.
  * @warning  This API is Not thread safe.
