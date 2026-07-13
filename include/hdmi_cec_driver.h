@@ -226,11 +226,12 @@ HDMI_CEC_STATUS HdmiCecAddLogicalAddress(int handle, int logicalAddresses);
  * @retval HDMI_CEC_IO_SUCCESS                    - Success
  * @retval HDMI_CEC_IO_NOT_OPENED                 - Module is not initialised
  * @retval HDMI_CEC_IO_INVALID_ARGUMENT           - Parameter passed to this function is invalid -
- *                                                  i.e. if any logical address less than 0x0 and greater than 0xF is given as argument
+ *                                                  i.e. if any logical address is outside the valid range [0x0, 0xF]
+ *                                                  (less than 0x0 or greater than 0xF)
  * @retval HDMI_CEC_IO_NOT_ADDED                  - Logical address was never added before [or] was previously removed successfully
  * @retval HDMI_CEC_IO_INVALID_HANDLE             - An invalid handle argument has been passed
- * @retval HDMI_CEC_IO_OPERATION_NOT_SUPPORTED    - Operation not supported. This API is not required if the SOC is performing the logical address discovery.
- *                                                  This operation is not supported in source devices.
+ * @retval HDMI_CEC_IO_OPERATION_NOT_SUPPORTED    - Source devices only: returned immediately
+ *                                                  without evaluating any other preconditions
  *
  * @pre HdmiCecOpen() must be called before calling this API.
  * @warning This API is NOT thread safe.
@@ -254,7 +255,7 @@ HDMI_CEC_STATUS HdmiCecRemoveLogicalAddress(int handle, int logicalAddresses);
  * @return HDMI_CEC_STATUS              - Status
  * @retval HDMI_CEC_IO_SUCCESS          - Success
  * @retval HDMI_CEC_IO_NOT_OPENED       - Module is not initialised
- * @retval HDMI_CEC_IO_INVALID_ARGUMENT - Parameter passed to this function is invalid
+ * @retval HDMI_CEC_IO_INVALID_ARGUMENT - If logicalAddress pointer is NULL
  * @retval HDMI_CEC_IO_INVALID_HANDLE   - An invalid handle argument has been passed
  *
  * @pre HdmiCecOpen() must be called before calling this API.
@@ -271,10 +272,6 @@ HDMI_CEC_STATUS HdmiCecGetLogicalAddress(int handle, int *logicalAddress);
  * @brief Gets the Physical Address obtained by the module
  *
  * This function gets the Physical address for the specified device type.
- * If the platform returns the unassigned sentinel value 0xF.F.F.F (0xFFFF), as
- * defined in HDMI 1.4b, or if the HDMI topology changes after HdmiCecOpen()
- * (for example, due to a hot-unplug event), HDMI_CEC_IO_INVALID_OUTPUT is
- * returned.
  *
  * @param[in] handle            - The handle returned from the HdmiCecOpen(). Non zero value
  * @param[out] physicalAddress  - Physical address acquired
@@ -288,7 +285,7 @@ HDMI_CEC_STATUS HdmiCecGetLogicalAddress(int handle, int *logicalAddress);
  * @return HDMI_CEC_STATUS              - Status
  * @retval HDMI_CEC_IO_SUCCESS          - Success
  * @retval HDMI_CEC_IO_NOT_OPENED       - Module is not initialised
- * @retval HDMI_CEC_IO_INVALID_ARGUMENT - Parameter passed to this function is invalid
+ * @retval HDMI_CEC_IO_INVALID_ARGUMENT - if physicalAddress pointer is NULL
  * @retval HDMI_CEC_IO_INVALID_HANDLE   - An invalid handle argument has been passed
  * @retval HDMI_CEC_IO_INVALID_OUTPUT   - Physical address can't be retrieved because it is outside the valid range
  * 
@@ -339,7 +336,6 @@ HDMI_CEC_STATUS HdmiCecGetPhysicalAddress(int handle, unsigned int *physicalAddr
  * @retval HDMI_CEC_IO_SUCCESS          - Success
  * @retval HDMI_CEC_IO_NOT_OPENED       - Module is not initialised
  * @retval HDMI_CEC_IO_INVALID_HANDLE   - An invalid handle argument has been passed
- * @retval HDMI_CEC_IO_INVALID_ARGUMENT - if data is invalid or null.
  *
  * @pre HdmiCecOpen() must be called before calling this API.
  * @warning This API is NOT thread safe.
@@ -370,7 +366,6 @@ HDMI_CEC_STATUS HdmiCecSetRxCallback(int handle, HdmiCecRxCallback_t cbfunc, voi
  * @retval HDMI_CEC_IO_SUCCESS          - Success
  * @retval HDMI_CEC_IO_NOT_OPENED       - Module is not initialised
  * @retval HDMI_CEC_IO_INVALID_HANDLE   - An invalid handle argument has been passed
- * @retval HDMI_CEC_IO_INVALID_ARGUMENT - if data is invalid or null.
  *
  * @pre HdmiCecOpen() must be called before calling this API.
  * @warning This API is NOT thread safe.
