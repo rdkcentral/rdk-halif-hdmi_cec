@@ -124,25 +124,32 @@ typedef void (*HdmiCecTxCallback_t)(int handle, void *callbackData, int result);
  * can be obtained via HdmiCecGetLogicalAddress().@n
  * For HDMI sink devices, logical address discovery does not occur during HdmiCecOpen() and
  * must be managed by the caller.@n
- * A valid handle is returned only on HDMI_CEC_IO_SUCCESS; for all other return codes the
- * handle is invalid and HdmiCecClose() must not be called.
+ * A valid handle is returned on HDMI_CEC_IO_SUCCESS or HDMI_CEC_IO_LOGICALADDRESS_UNAVAILABLE;
+ * HdmiCecClose() must be called in both cases to release resources.@n
+ * For all other return codes the handle is invalid and HdmiCecClose() must not be called.
  *
  * @param [out] handle                    - The handle used by application to uniquely 
  *                                          identify the HAL instance
  *
  * @return HDMI_CEC_STATUS                        - Status
- * @retval HDMI_CEC_IO_SUCCESS                    - Success
- * @retval HDMI_CEC_IO_ALREADY_OPEN               - Function is already open. 
- *                                                  This error code will deprecated in the next phase.
+ * @retval HDMI_CEC_IO_SUCCESS                    - Module opened and logical address assigned
+ *                                                  (source devices) or ready for logical address
+ *                                                  management (sink devices). On subsequent calls
+ *                                                  the same valid handle is returned and
+ *                                                  HdmiCecClose() must not be called again.
+ * @retval HDMI_CEC_IO_ALREADY_OPEN               - Function is already open.
+ *                                                  This error code will be deprecated in the next phase.
  * @retval HDMI_CEC_IO_INVALID_ARGUMENT           - Parameter passed to this function is invalid
- * @retval HDMI_CEC_IO_LOGICALADDRESS_UNAVAILABLE - CEC bus is unavailable at open time
- *                                                  (e.g. no sink present for source devices,
- *                                                  or cable disconnected for any device type)
+ * @retval HDMI_CEC_IO_LOGICALADDRESS_UNAVAILABLE - Source devices only: logical address could
+ *                                                  not be acquired because no sink device is
+ *                                                  present on the CEC bus (e.g. cable
+ *                                                  disconnected or no connected display).
  * @retval HDMI_CEC_IO_GENERAL_ERROR              - Unexpected hardware or platform failure
  * 
  * 
- * @post HdmiCecClose() must be called to release resources. Applicable only when
- *       HDMI_CEC_IO_SUCCESS is returned.
+ * @post HdmiCecClose() must be called to release resources when HDMI_CEC_IO_SUCCESS is
+ *       returned (all device types). For source devices, HdmiCecClose() must also be
+ *       called when HDMI_CEC_IO_LOGICALADDRESS_UNAVAILABLE is returned.
  * @warning This API is NOT thread safe.
  *
  * @see HdmiCecClose()
