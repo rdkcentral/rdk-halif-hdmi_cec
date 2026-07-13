@@ -402,7 +402,9 @@ HDMI_CEC_STATUS HdmiCecSetTxCallback(int handle, HdmiCecTxCallback_t cbfunc, voi
  *                    HDMI_CEC_IO_SENT_BUT_NOT_ACKD  - message sent but not acknowledged
  *                                                     (e.g. no device at the destination address)
  *                    HDMI_CEC_IO_SENT_FAILED         - message could not be sent
- *                                                     (e.g. bus collision or cable not connected)
+ *                                                     (e.g. bus collision, cable not connected,
+ *                                                     or platform did not confirm transmission
+ *                                                     within an implementation-defined timeout)
  *
  * @return HDMI_CEC_STATUS                        - API call status (check before inspecting result)
  * @retval HDMI_CEC_IO_SUCCESS                    - Transmission attempted; inspect result for
@@ -419,6 +421,8 @@ HDMI_CEC_STATUS HdmiCecSetTxCallback(int handle, HdmiCecTxCallback_t cbfunc, voi
  *                                                  return bus outcome directly instead of SUCCESS)
  * @retval HDMI_CEC_IO_SENT_FAILED                - Message could not be sent (platform may
  *                                                  return bus outcome directly instead of SUCCESS)
+ * @retval HDMI_CEC_IO_GENERAL_ERROR              - Underlying platform transport failed to
+ *                                                  initiate transmission; *result is undefined
  *
  * @pre  HdmiCecOpen() should be called before calling this API.
  * @warning  This API is Not thread safe.
@@ -447,6 +451,8 @@ HDMI_CEC_STATUS HdmiCecTx(int handle, const unsigned char *buf, int len, int *re
  * @retval HDMI_CEC_IO_NOT_OPENED                 - Module is not initialised
  * @retval HDMI_CEC_IO_INVALID_ARGUMENT           - Parameter passed to this function is invalid
  * @retval HDMI_CEC_IO_INVALID_HANDLE             - An invalid handle argument has been passed
+ * @retval HDMI_CEC_IO_GENERAL_ERROR              - Underlying platform transport failed to
+ *                                                  queue the message
  *
  * @pre  HdmiCecOpen(), HdmiCecSetRxCallback(), HdmiCecSetTxCallback()  should be called before calling this API.
  * @warning  This API is Not thread safe.
