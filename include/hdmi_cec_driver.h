@@ -159,21 +159,15 @@ HDMI_CEC_STATUS HdmiCecOpen(int *handle);
 /**
  * @brief Closes an instance of HDMI CEC HAL
  *
- * This function uninitialises the module, clears all registered logical addresses,
- * and deregisters all callbacks.@n
- * This function succeeds regardless of HDMI cable connection state for all device types.@n
- * For source devices, it is safe to call from an HPD (Hot Plug Detect) event handler;
- * middleware is expected to call HdmiCecClose() on every HPD event and reinitialise
- * from scratch via HdmiCecOpen().
+ * This function will uninitialise the module.@n
+ * Close will clear up registered logical addresses.@n
+ * Subsequent calls to this API will return HDMI_CEC_IO_NOT_OPENED.
  *
  * @param[in] handle - The handle returned from the HdmiCecOpen(). Non zero value
  *
  * @return HDMI_CEC_STATUS              - Status
  * @retval HDMI_CEC_IO_SUCCESS          - Success
- * @retval HDMI_CEC_IO_NOT_OPENED       - Module is not open: HdmiCecOpen() was never called,
- *                                        the last HdmiCecOpen() did not return
- *                                        HDMI_CEC_IO_SUCCESS, or HdmiCecClose() has
- *                                        already been called successfully
+ * @retval HDMI_CEC_IO_NOT_OPENED       - Module is not initialised
  * @retval HDMI_CEC_IO_INVALID_HANDLE   - An invalid handle argument has been passed
  * @retval HDMI_CEC_IO_GENERAL_ERROR    - Unexpected platform-level failure
  *
