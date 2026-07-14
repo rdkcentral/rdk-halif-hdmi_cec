@@ -285,7 +285,7 @@ HDMI_CEC_STATUS HdmiCecGetLogicalAddress(int handle, int *logicalAddress);
  * @return HDMI_CEC_STATUS              - Status
  * @retval HDMI_CEC_IO_SUCCESS          - Success
  * @retval HDMI_CEC_IO_NOT_OPENED       - Module is not initialised
- * @retval HDMI_CEC_IO_INVALID_ARGUMENT - if physicalAddress pointer is NULL
+ * @retval HDMI_CEC_IO_INVALID_ARGUMENT - If physicalAddress pointer is NULL
  * @retval HDMI_CEC_IO_INVALID_HANDLE   - An invalid handle argument has been passed
  * @retval HDMI_CEC_IO_INVALID_OUTPUT   - Physical address can't be retrieved because it is outside the valid range
  * 
