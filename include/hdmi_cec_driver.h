@@ -147,9 +147,9 @@ typedef void (*HdmiCecTxCallback_t)(int handle, void *callbackData, int result);
  * @retval HDMI_CEC_IO_GENERAL_ERROR              - Unexpected hardware or platform failure
  * 
  * 
- * @post HdmiCecClose() must be called to release resources when HDMI_CEC_IO_SUCCESS is
- *       returned (all device types). For source devices, HdmiCecClose() must also be
- *       called when HDMI_CEC_IO_LOGICALADDRESS_UNAVAILABLE is returned.
+ * @post HdmiCecClose() must be called exactly once to release resources when a valid handle is returned:
+ *       HDMI_CEC_IO_SUCCESS (all device types) and, for source devices, also
+ *       HDMI_CEC_IO_LOGICALADDRESS_UNAVAILABLE.
  * @warning This API is NOT thread safe.
  *
  * @see HdmiCecClose()
