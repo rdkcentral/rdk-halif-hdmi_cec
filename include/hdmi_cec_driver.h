@@ -124,8 +124,8 @@ typedef void (*HdmiCecTxCallback_t)(int handle, void *callbackData, int result);
  * can be obtained via HdmiCecGetLogicalAddress().@n
  * For HDMI sink devices, logical address discovery does not occur during HdmiCecOpen() and
  * must be managed by the caller.@n
- * A valid handle is returned on HDMI_CEC_IO_SUCCESS or HDMI_CEC_IO_LOGICALADDRESS_UNAVAILABLE;
- * HdmiCecClose() must be called in both cases to release resources.@n
+ * A valid handle is returned on HDMI_CEC_IO_SUCCESS or HDMI_CEC_IO_LOGICALADDRESS_UNAVAILABLE.@n
+ * HdmiCecClose() must be called exactly once for that handle to release resources.@n
  * For all other return codes the handle is invalid and HdmiCecClose() must not be called.
  *
  * @param [out] handle                    - The handle used by application to uniquely 
