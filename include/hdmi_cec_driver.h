@@ -144,8 +144,7 @@ typedef void (*HdmiCecTxCallback_t)(int handle, void *callbackData, int result);
  *                                                  when HDMI_CEC_IO_SUCCESS is returned.
  * @return HDMI_CEC_STATUS                        - Status
  * @retval HDMI_CEC_IO_SUCCESS                    - Success
- * @retval HDMI_CEC_IO_ALREADY_OPEN               - This error code will be Deprecated in next phase.
-                                                    Module is already open.
+ * @retval HDMI_CEC_IO_ALREADY_OPEN               - Module is already open (deprecated; may be removed in a future release).
  * @retval HDMI_CEC_IO_INVALID_ARGUMENT           - Invalid argument passed to this function.
  *                                                  This includes a NULL handle parameter.
  * @retval HDMI_CEC_IO_LOGICALADDRESS_UNAVAILABLE - Logical address is not available for source devices.
@@ -212,7 +211,7 @@ HDMI_CEC_STATUS HdmiCecClose(int handle);
  * @retval HDMI_CEC_IO_INVALID_ARGUMENT           - The logicalAddress argument is invalid.
  *                                                  Valid range is 0x0 to 0xF.
  * @retval HDMI_CEC_IO_INVALID_HANDLE             - An invalid handle has been provided.
- * @retval HDMI_CEC_IO_GENERAL                    - Unable to verify logical address
+ * @retval HDMI_CEC_IO_GENERAL_ERROR              - Unable to verify logical address
  *                                                  availability due to a bus or connection error.
  * @retval HDMI_CEC_IO_OPERATION_NOT_SUPPORTED    - The requested operation is not supported
  *                                                  for the current device type (HDMI Source).
@@ -245,7 +244,7 @@ HDMI_CEC_STATUS HdmiCecAddLogicalAddress(int handle, int logicalAddresses);
  *
  * @param[in] handle                              - A Valid handle returned from the HdmiCecOpen().
  *                                                  must be a non zero value
- * @param[in] logicalAddresses                    - Logical address to be acquired.
+ * @param[in] logicalAddresses                    - Logical address to be released.
  *                                                  Valid range is 0x0 to 0xF.
  *
  * @return HDMI_CEC_STATUS                        - Status
@@ -262,8 +261,8 @@ HDMI_CEC_STATUS HdmiCecAddLogicalAddress(int handle, int logicalAddresses);
  * @pre HdmiCecAddLogicalAddress() must have been called successfully for the
  *      logical address before invoking this API.
  * @post On successful return, the logical address is released, the module is
-      reset to the default logical address (0xF), and the module shall not
-      acknowledge POLL messages for the released logical address.
+ *       reset to the default logical address (0xF), and the module shall not
+ *       acknowledge POLL messages for the released logical address.
  * @warning This API is NOT thread safe.
  * @see HdmiCecAddLogicalAddress(), HdmiCecGetLogicalAddress()
  * 
@@ -306,12 +305,13 @@ HDMI_CEC_STATUS HdmiCecRemoveLogicalAddress(int handle, int logicalAddresses);
  * @retval HDMI_CEC_IO_INVALID_HANDLE   - An invalid handle argument has been passed
  *
  * @pre HdmiCecOpen() must be called successfully before calling this API.
+ * @pre For HDMI sink devices, HdmiCecAddLogicalAddress() must have been called
+ *      successfully and the specified logical address must be assigned before
+ *      invoking this API.
  *
  * @post On successful return, the logicalAddress output parameter contains the
  *       logical address assigned to the module.
- * @pre HdmiCecOpen() must be called before calling this API.
- * @pre HdmiCecAddLogicalAddress() must have been called successfully and the
- *      specified logical address must be assigned before invoking this API.
+ *
  * @warning This API is NOT thread safe.
  * @note This API is not required if the SOC is performing the logical address discovery.
  * @see HdmiCecAddLogicalAddress(), HdmiCecRemoveLogicalAddress()
