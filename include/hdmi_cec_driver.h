@@ -130,9 +130,17 @@ typedef void (*HdmiCecTxCallback_t)(int handle, void *callbackData, int result);
  * HDMI Source devices:
  * - Logical address discovery shall take place during HdmiCecOpen().
  * - The allocated logical address can be obtained using HdmiCecGetLogicalAddress().
- * - If logical address discovery fails,
- *   HDMI_CEC_IO_LOGICALADDRESS_UNAVAILABLE shall be returned and the HDMI-CEC
- *   HAL instance shall release all allocated resources before returning.
+ *
+ * @note This note applies to HDMI source devices only.
+ *       The HAL internally re-discovers and updates the logical address when an
+ *       HDMI connect state change event is detected (via an internal platform callback).
+ *       The caller does not need to re-invoke HdmiCecOpen() to trigger this;
+ *       a subsequent call to HdmiCecGetLogicalAddress() after the HDMI connect
+ *       state change event has been processed shall return the newly assigned address.
+ *
+ * @note After an HDMI disconnect state change event, the HAL shall reset the logical address
+ *       to the default value 0x0F. HdmiCecGetLogicalAddress() while the HDMI
+ *       cable is disconnected shall return 0x0F.
  *
  * HDMI Sink devices:
  * - HDMI_CEC_IO_LOGICALADDRESS_UNAVAILABLE shall not be returned.
@@ -188,28 +196,33 @@ HDMI_CEC_STATUS HdmiCecClose(int handle);
 /**
  * @brief Sets the logical address assignment for a HDMI sink device.
  *
- * HDMI Sink devices:
+ * @par HDMI Sink devices
  * - This API is applicable.
  * - Logical address discovery shall be performed by the caller.
- * - The logical address provided through this API shall be in the range
- *   0x0 to 0xF.
+ * - Valid logical address values are defined by the HDMI CEC specification
+ *   for the Primary Device Type:
+ *   - 0  (TV)           : TV device at Physical Address 0.0.0.0
+ *   - 14 (Specific Use) : TV device at any other Physical Address, or as
+ *                         fallback when address 0 is unavailable
+ *   - 15 (Unregistered) : fallback when neither address 0 nor 14 can be
+ *                         allocated
  *
- * HDMI Source devices:
+ * @par HDMI Source devices
  * - This API is not applicable.
  * - Invoking this API shall return HDMI_CEC_IO_OPERATION_NOT_SUPPORTED.
  *
  * @param[in] handle                              - A Valid handle returned from the HdmiCecOpen().
  *                                                  must be a non zero value
  * @param[in] logicalAddresses                    - Logical address to be acquired.
- *                                                  Valid range is 0x0 to 0xF.
+ *                                                  See HDMI Sink devices section above for valid values.
  * @return HDMI_CEC_STATUS                        - Status
  * @retval HDMI_CEC_IO_SUCCESS                    - POLL message is sent successfully and
  *                                                  no device acknowledges the logical address
  *                                                  on the CEC bus. The logical address is
  *                                                  assigned successfully.
  * @retval HDMI_CEC_IO_NOT_OPENED                 - Module is not initialized
- * @retval HDMI_CEC_IO_INVALID_ARGUMENT           - The logicalAddress argument is invalid.
- *                                                  Valid range is 0x0 to 0xF.
+ * @retval HDMI_CEC_IO_INVALID_ARGUMENT           - Invalid logicalAddress argument.
+ *                                                  See logicalAddresses @param for valid values.
  * @retval HDMI_CEC_IO_INVALID_HANDLE             - An invalid handle has been provided.
  * @retval HDMI_CEC_IO_GENERAL_ERROR              - Unable to verify logical address
  *                                                  availability due to a bus or connection error.
@@ -244,14 +257,13 @@ HDMI_CEC_STATUS HdmiCecAddLogicalAddress(int handle, int logicalAddresses);
  *
  * @param[in] handle                              - A Valid handle returned from the HdmiCecOpen().
  *                                                  must be a non zero value
- * @param[in] logicalAddresses                    - Logical address to be released.
- *                                                  Valid range is 0x0 to 0xF.
+ * @param[in] logicalAddresses                    - Previously assigned logical address to be released.
  *
  * @return HDMI_CEC_STATUS                        - Status
  * @retval HDMI_CEC_IO_SUCCESS                    - Success
  * @retval HDMI_CEC_IO_NOT_OPENED                 - Module is not initialised
- * @retval HDMI_CEC_IO_INVALID_ARGUMENT           - The logicalAddress argument is invalid.
- *                                                  Valid range is 0x0 to 0xF.
+ * @retval HDMI_CEC_IO_INVALID_ARGUMENT           - Invalid logicalAddress argument.
+ *                                                  See logicalAddresses @param for valid values.
  * @retval HDMI_CEC_IO_NOT_ADDED                  - Logical address was never added before [or] was previously removed successfully
  * @retval HDMI_CEC_IO_INVALID_HANDLE             - An invalid handle has been provided.
  * @retval HDMI_CEC_IO_OPERATION_NOT_SUPPORTED    - The requested operation is not supported
@@ -282,16 +294,8 @@ HDMI_CEC_STATUS HdmiCecRemoveLogicalAddress(int handle, int logicalAddresses);
  * - The returned logical address shall correspond to the device type as defined
  *   in the HDMI Specification.
  *
- * @note This note applies to HDMI source devices only.
- *       The HAL internally re-discovers and updates the logical address when an
- *       HDMI hotplug-in event is detected (via an internal platform callback).
- *       The caller does not need to re-invoke HdmiCecOpen() to trigger this;
- *       a subsequent call to HdmiCecGetLogicalAddress() after the hotplug-in
- *       event has been processed shall return the newly assigned address.
- *
- * @note After an HDMI hotplug-out event, the HAL shall reset the logical address
- *       to the default value 0x0F. Calling this API while the HDMI cable is
- *       disconnected shall return 0x0F.
+ * @note For HDMI source device HDMI state change re-discovery and reset behaviour,
+ *       refer to the HdmiCecOpen() documentation.
  *
  * @param[in] handle                    - A Valid handle returned from the HdmiCecOpen().
  *                                        must be a non zero value
@@ -329,15 +333,15 @@ HDMI_CEC_STATUS HdmiCecGetLogicalAddress(int handle, int *logicalAddress);
  * HDMI Sink devices:
  * - A sink device directly connected at the root shall have a fixed physical
  *   address of 0.0.0.0.
- * - The physical address shall not change due to HDMI hotplug events.
+ * - The physical address shall not change due to HDMI state change events.
  *
  * HDMI Source devices:
  * - The physical address shall be obtained from the connected HDMI topology.
- * - After an HDMI hotplug-in event, the HAL shall internally re-discover the
+ * - After an HDMI connect state change event, the HAL shall internally re-discover the
  *   physical address.
  * - Until physical address discovery completes successfully, this API shall
  *   return HDMI_CEC_IO_INVALID_OUTPUT.
- * - After an HDMI hotplug-out event, the previously obtained physical address
+ * - After an HDMI disconnect state change event, the previously obtained physical address
  *   shall be considered invalid.
  *   This API shall return HDMI_CEC_IO_INVALID_OUTPUT until a new HDMI connection
  *   is established and physical address discovery completes successfully.
@@ -361,7 +365,7 @@ HDMI_CEC_STATUS HdmiCecGetLogicalAddress(int handle, int *logicalAddress);
  * @retval HDMI_CEC_IO_INVALID_OUTPUT   - Physical address cannot be retrieved. This includes:
  *                                        the HDMI cable is not connected (source devices),
  *                                        physical address discovery is still in progress
- *                                        after a hotplug-in event, or the retrieved address
+ *                                        after an HDMI connect state change event, or the retrieved address
  *                                        is outside the valid range (0.0.0.0 to F.F.F.E).
  *
  * @pre HdmiCecOpen() must be called successfully before calling this API.

@@ -155,9 +155,11 @@ None
 
 The caller is expected to have complete control over the life cycle of the `HAL`.
 
-1. Initialize the `HAL` using function: `HdmiCecOpen()` before making any other `API` calls. This call also discovers the physical address based on the connection topology. In case of source devices, `HdmiCecOpen()` must initiate the logical address discovery as part of this routine. In case of sink devices, logical address will be fixed and set using the `HdmiCecAddLogicalAddress()`. If `HdmiCecOpen()` call fails, the `HAL` must return the respective error code, so that the caller can retry the operation.
+1. Initialize the `HAL` using function: `HdmiCecOpen()` before making any other `API` calls. This call also discovers the physical address based on the connection topology. In case of source devices, `HdmiCecOpen()` must initiate the logical address discovery as part of this routine. In case of sink devices, logical address will be fixed and set using the `HdmiCecAddLogicalAddress()`.
 
-2. Once logical address and physical address are assigned, the caller will be able to send and receive the respective `CEC` messages.
+2. If `HdmiCecOpen()` call fails, the `HAL` must release all allocated resources before returning errorcode so that the caller can retry the operation.
+
+3. Once logical address and physical address are assigned, the caller will be able to send and receive the respective `CEC` messages.
 
   - For asynchronous receive operations, use the callback function: `HdmiCecSetRxCallback()`. the caller must register a callback after initialisation.
 
@@ -165,7 +167,7 @@ The caller is expected to have complete control over the life cycle of the `HAL`
 
   - For asynchronous transmit, use the function: `HdmiCecTxAsync()`. The caller must register a callback via `HdmiCecSetTxCallback()` in order to receive the status or acknowledgement.
 
-3.De-intialise the `HAL` using the function: `HdmiCecClose()`.
+4.De-intialise the `HAL` using the function: `HdmiCecClose()`.
 
 NOTE: The module would operate deterministically if the above call sequence is followed.
 
