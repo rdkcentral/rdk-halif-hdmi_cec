@@ -167,7 +167,7 @@ The caller is expected to have complete control over the life cycle of the `HAL`
 
   - For asynchronous transmit, use the function: `HdmiCecTxAsync()`. The caller must register a callback via `HdmiCecSetTxCallback()` in order to receive the status or acknowledgement.
 
-4.De-intialise the `HAL` using the function: `HdmiCecClose()`.
+4. De-initialise the `HAL` using the function: `HdmiCecClose()`.
 
 NOTE: The module would operate deterministically if the above call sequence is followed.
 
