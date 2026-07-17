@@ -157,7 +157,7 @@ The caller is expected to have complete control over the life cycle of the `HAL`
 
 1. Initialize the `HAL` using function: `HdmiCecOpen()` before making any other `API` calls. This call also discovers the physical address based on the connection topology. In case of source devices, `HdmiCecOpen()` must initiate the logical address discovery as part of this routine. In case of sink devices, logical address will be fixed and set using the `HdmiCecAddLogicalAddress()`.
 
-2. If `HdmiCecOpen()` call fails, the `HAL` must release all allocated resources before returning errorcode so that the caller can retry the operation.
+2. If `HdmiCecOpen()` call fails, the `HAL` must release all allocated resources before returning an error code so that the caller can retry the operation.
 
 3. Once logical address and physical address are assigned, the caller will be able to send and receive the respective `CEC` messages.
 
