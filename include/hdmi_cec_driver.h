@@ -78,11 +78,11 @@ typedef enum HDMI_CEC_IO_ERROR
     HDMI_CEC_IO_SENT_AND_ACKD = 1,          ///< Send and acknowledgement received
     HDMI_CEC_IO_SENT_BUT_NOT_ACKD,          ///< Sent but acknowledgement not received
     HDMI_CEC_IO_SENT_FAILED,                ///< Operation failed
-    HDMI_CEC_IO_NOT_OPENED,                 ///< Module is not initialised
+    HDMI_CEC_IO_NOT_OPENED,                 ///< Module is not open. will be removed in a future release.
     HDMI_CEC_IO_INVALID_ARGUMENT,           ///< Invalid argument is passed to the module
     HDMI_CEC_IO_LOGICALADDRESS_UNAVAILABLE, ///< Logical address is not available
     HDMI_CEC_IO_GENERAL_ERROR,              ///< Operation general error.
-    HDMI_CEC_IO_ALREADY_OPEN,               ///< Module is already initialised
+    HDMI_CEC_IO_ALREADY_OPEN,               ///< @deprecated Module is already initialised
     HDMI_CEC_IO_ALREADY_REMOVED,            ///< Removal operation is already executed
     HDMI_CEC_IO_INVALID_OUTPUT,             ///< Output arguments fall outside the valid range
     HDMI_CEC_IO_INVALID_HANDLE,             ///< An invalid handle argument has been passed
@@ -108,7 +108,8 @@ typedef enum HDMI_CEC_IO_ERROR
 typedef void (*HdmiCecRxCallback_t)(int handle, void *callbackData, unsigned char *buf, int len);
 
 /**
- * @note This API is deprecated.
+ * @deprecated Use HdmiCecSetRxCallback() to receive async transmit status.
+ *             This callback type will be removed in a future release.
  *
  * @brief Callback function triggered to report the status of the latest transmit message
  *
@@ -331,30 +332,26 @@ HDMI_CEC_STATUS HdmiCecGetLogicalAddress(int handle, int *logicalAddress);
  * This function gets the Physical address for the specified device type.
  *
  * HDMI Sink devices:
- * - A sink device directly connected at the root shall have a fixed physical
- *   address of 0.0.0.0.
+ * - A sink device that is the CEC root (has no HDMI output) shall have a
+ *   fixed physical address of 0.0.0.0.
  * - The physical address shall not change due to HDMI state change events.
  *
  * HDMI Source devices:
  * - The physical address shall be obtained from the connected HDMI topology.
  * - After an HDMI connect state change event, the HAL shall internally re-discover the
  *   physical address.
- * - Until physical address discovery completes successfully, this API shall
- *   return HDMI_CEC_IO_INVALID_OUTPUT.
  * - After an HDMI disconnect state change event, the previously obtained physical address
  *   shall be considered invalid.
- *   This API shall return HDMI_CEC_IO_INVALID_OUTPUT until a new HDMI connection
- *   is established and physical address discovery completes successfully.
  *
  * @param[in] handle                    - A Valid handle returned from the HdmiCecOpen().
  *                                         must be a non zero value
  * @param[out] physicalAddress          - Pointer to store the physical address
- *                                       obtained by the module.
- *                                       The valid physical address range is
- *                                       0.0.0.0 to F.F.F.E.
- *                                       A sink device connected directly at the
- *                                       root shall have a physical address
- *                                       of 0.0.0.0.
+ *                                         obtained by the module.
+ *                                        The valid physical address range is
+ *                                          0.0.0.0 to F.F.F.E.
+ *                                        A sink device connected directly at the
+ *                                         root shall have a physical address
+ *                                         of 0.0.0.0.
  *
  * @return HDMI_CEC_STATUS              - Status
  * @retval HDMI_CEC_IO_SUCCESS          - Success
@@ -362,11 +359,11 @@ HDMI_CEC_STATUS HdmiCecGetLogicalAddress(int handle, int *logicalAddress);
  * @retval HDMI_CEC_IO_INVALID_ARGUMENT - The physicalAddress argument is invalid
  *                                        or is a NULL pointer.
  * @retval HDMI_CEC_IO_INVALID_HANDLE   - An invalid handle argument has been passed
- * @retval HDMI_CEC_IO_INVALID_OUTPUT   - Physical address cannot be retrieved. This includes:
- *                                        the HDMI cable is not connected (source devices),
- *                                        physical address discovery is still in progress
- *                                        after an HDMI connect state change event, or the retrieved address
- *                                        is outside the valid range (0.0.0.0 to F.F.F.E).
+ * @retval HDMI_CEC_IO_INVALID_OUTPUT   - This API will return HDMI_CEC_IO_INVALID_OUTPUT if:
+ *                                        - The physical address cannot be retrieved, or
+ *                                        - The HDMI cable is not connected (source devices)
+ *                                        - The retrieved address is outside the valid range (0.0.0.0 to F.F.F.E)
+
  *
  * @pre HdmiCecOpen() must be called successfully before calling this API.
  *
