@@ -78,7 +78,7 @@ typedef enum HDMI_CEC_IO_ERROR
     HDMI_CEC_IO_SENT_AND_ACKD = 1,          ///< Send and acknowledgement received
     HDMI_CEC_IO_SENT_BUT_NOT_ACKD,          ///< Sent but acknowledgement not received
     HDMI_CEC_IO_SENT_FAILED,                ///< Operation failed
-    HDMI_CEC_IO_NOT_OPENED,                 ///< Module is not open. will be removed in a future release.
+    HDMI_CEC_IO_NOT_OPENED,                 ///< Module is not initialised
     HDMI_CEC_IO_INVALID_ARGUMENT,           ///< Invalid argument is passed to the module
     HDMI_CEC_IO_LOGICALADDRESS_UNAVAILABLE, ///< Logical address is not available
     HDMI_CEC_IO_GENERAL_ERROR,              ///< Operation general error.
