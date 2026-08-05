@@ -82,7 +82,7 @@ typedef enum HDMI_CEC_IO_ERROR
     HDMI_CEC_IO_INVALID_ARGUMENT,           ///< Invalid argument is passed to the module
     HDMI_CEC_IO_LOGICALADDRESS_UNAVAILABLE, ///< Logical address is not available
     HDMI_CEC_IO_GENERAL_ERROR,              ///< Operation general error.
-    HDMI_CEC_IO_ALREADY_OPEN,               ///< @deprecated Module is already initialised
+    HDMI_CEC_IO_ALREADY_OPEN,               ///< Module is already initialised
     HDMI_CEC_IO_ALREADY_REMOVED,            ///< Removal operation is already executed
     HDMI_CEC_IO_INVALID_OUTPUT,             ///< Output arguments fall outside the valid range
     HDMI_CEC_IO_INVALID_HANDLE,             ///< An invalid handle argument has been passed
@@ -124,9 +124,8 @@ typedef void (*HdmiCecTxCallback_t)(int handle, void *callbackData, int result);
  * @brief Initializes the HDMI CEC HAL
  *
  * This function is required to be called before the other APIs in this module.@n
- * Subsequent calls to this API will return HDMI_CEC_IO_SUCCESS if the HAL is
- * already initialized. Support for HDMI_CEC_IO_ALREADY_OPEN is deprecated and
- * may be removed in a future release.
+ * Subsequent calls to this API will return HDMI_CEC_IO_ALREADY_OPEN if the HAL is
+ * already initialized.
  *
  * HDMI Source devices:
  * - Logical address discovery shall take place during HdmiCecOpen().
@@ -153,7 +152,7 @@ typedef void (*HdmiCecTxCallback_t)(int handle, void *callbackData, int result);
  *                                                  when HDMI_CEC_IO_SUCCESS is returned.
  * @return HDMI_CEC_STATUS                        - Status
  * @retval HDMI_CEC_IO_SUCCESS                    - Success
- * @retval HDMI_CEC_IO_ALREADY_OPEN               - Module is already open (deprecated; may be removed in a future release).
+ * @retval HDMI_CEC_IO_ALREADY_OPEN               - Module is already open.
  * @retval HDMI_CEC_IO_INVALID_ARGUMENT           - Invalid argument passed to this function.
  *                                                  This includes a NULL handle parameter.
  * @retval HDMI_CEC_IO_LOGICALADDRESS_UNAVAILABLE - Logical address is not available for source devices.
